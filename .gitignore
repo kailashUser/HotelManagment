@@ -1,0 +1,20 @@
+# Ignore node_modules and Angular build
+/frontend/hotel-dev/node_modules/
+/frontend/hotel-dev/dist/
+/frontend/hotel-dev/.angular/
+frontend/hotel-dev/.env
+
+# Ignore .NET build
+/backend/HotelReservation/HotelReservation/bin/
+/backend/HotelReservation/HotelReservation/obj/
+*.user
+*.suo
+*.vs/
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
