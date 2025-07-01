@@ -6,46 +6,62 @@
           <h4 class="mb-0">Payment Details</h4>
         </div>
         <div class="card-body">
-          <form (ngSubmit)="onSubmit()" #paymentForm="ngForm" *ngIf="!paymentSuccessful">
+          <form
+            (ngSubmit)="onSubmit()"
+            #paymentForm="ngForm"
+            *ngIf="!paymentSuccessful"
+          >
             <div class="row">
               <div class="col-md-8">
                 <!-- Payment Form -->
                 <div class="mb-4">
                   <div class="mb-3">
                     <label class="form-label">Card Number</label>
-                    <input type="text" class="form-control" 
-                           [(ngModel)]="payment.cardNumber" 
-                           name="cardNumber" 
-                           pattern="[0-9]{16}" 
-                           placeholder="1234 5678 9012 3456" 
-                           required>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="payment.cardNumber"
+                      name="cardNumber"
+                      pattern="[0-9]{16}"
+                      placeholder="1234 5678 9012 3456"
+                      required
+                    />
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Cardholder Name</label>
-                    <input type="text" class="form-control" 
-                           [(ngModel)]="payment.cardHolder" 
-                           name="cardHolder" 
-                           placeholder="John Doe" 
-                           required>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="payment.cardHolder"
+                      name="cardHolder"
+                      placeholder="John Doe"
+                      required
+                    />
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label class="form-label">Expiry Date</label>
-                      <input type="text" class="form-control" 
-                             [(ngModel)]="payment.expiryDate" 
-                             name="expiryDate" 
-                             pattern="(0[1-9]|1[0-2])\/([0-9]{2})" 
-                             placeholder="MM/YY" 
-                             required>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="payment.expiryDate"
+                        name="expiryDate"
+                        pattern="(0[1-9]|1[0-2])\/([0-9]{2})"
+                        placeholder="MM/YY"
+                        required
+                      />
                     </div>
                     <div class="col-md-6 mb-3">
                       <label class="form-label">CVV</label>
-                      <input type="text" class="form-control" 
-                             [(ngModel)]="payment.cvv" 
-                             name="cvv" 
-                             pattern="[0-9]{3,4}" 
-                             placeholder="123" 
-                             required>
+                      <input
+                        type="text"
+                        class="form-control"
+                        [(ngModel)]="payment.cvv"
+                        name="cvv"
+                        pattern="[0-9]{3,4}"
+                        placeholder="123"
+                        required
+                      />
                     </div>
                   </div>
                 </div>
@@ -55,7 +71,7 @@
               <div class="col-md-4">
                 <div class="card bg-light">
                   <div class="card-body">
-                    <h5 class="card-title mb-4">Payment Summary</h5>
+                    <h5 class="card-title mb-4">Reservation Summary</h5>
                     <div class="d-flex justify-content-between">
                       <span>Total Amount</span>
                       <strong>${{ formatPrice(payment.amount) }}</strong>
@@ -66,28 +82,44 @@
             </div>
 
             <div class="d-flex gap-2">
-              <button type="submit" class="btn btn-primary flex-grow-1" 
-                      [disabled]="!paymentForm.form.valid || processing">
-                <span *ngIf="processing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                {{ processing ? 'Processing...' : 'Pay Now' }}
+              <button
+                type="submit"
+                class="btn btn-primary flex-grow-1"
+                [disabled]="!paymentForm.form.valid || processing"
+              >
+                <span
+                  *ngIf="processing"
+                  class="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                {{ processing ? "Processing..." : "Book your room" }}
               </button>
-              <button type="button" class="btn btn-outline-secondary" 
-                      (click)="onCancel()">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="onCancel()"
+              >
                 Cancel
               </button>
             </div>
           </form>
 
           <!-- Payment Success Message -->
-          <div *ngIf="paymentSuccessful" class="alert alert-success text-center" role="alert">
+          <div
+            *ngIf="paymentSuccessful"
+            class="alert alert-success text-center"
+            role="alert"
+          >
             <h4 class="alert-heading">Payment Successful!</h4>
             <p>Your payment was processed successfully.</p>
-            <hr>
-            <p class="mb-0">You will be redirected to your reservations shortly.</p>
+            <hr />
+            <p class="mb-0">
+              You will be redirected to your reservations shortly.
+            </p>
           </div>
-
         </div>
       </div>
     </div>
   </div>
-</div> 
+</div>

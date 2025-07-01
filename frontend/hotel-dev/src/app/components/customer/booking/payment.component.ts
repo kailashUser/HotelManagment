@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 interface PaymentForm {
   cardNumber: string;
@@ -49,7 +49,7 @@ export class PaymentComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const state = history.state as BookingState;
@@ -109,7 +109,7 @@ export class PaymentComponent implements OnInit {
       this.paymentSuccessful = true;
 
       // ✅ Log payment success details
-      console.log('Payment successful! Details:', this.payment);
+      console.log('Booking successful! Details:', this.payment);
 
       // ✅ Show confirmation modal
       const modalRef = this.modalService.open(ConfirmationModalComponent, {
@@ -117,9 +117,9 @@ export class PaymentComponent implements OnInit {
         backdrop: 'static',
       });
 
-      modalRef.componentInstance.title = '💳 Payment Successful!';
+      modalRef.componentInstance.title = '💳 Booking Successful!';
       modalRef.componentInstance.message = `
-        <p>Your payment has been processed successfully.</p>
+        <p>Payment Details Added Successfully</p>
         <p><strong>Thank you</strong> for your reservation!</p>
         <p>You will be redirected shortly.</p>
       `;
