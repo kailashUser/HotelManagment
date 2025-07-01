@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ManagerService } from '../../../services/manager.service';
+import { UserDisplay } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
 
 interface StaffMember {
   id: number;
@@ -19,32 +20,41 @@ interface StaffMember {
 })
 export class StaffListComponent implements OnInit {
 
-  staffMembers: StaffMember[] = [];
+  staffMembers: UserDisplay[] = [];
+  AllUsers: UserDisplay[] = [];
 
-  constructor(private managerService: ManagerService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    // Load staff data (placeholder)
+
     this.loadStaff();
   }
 
+  // getting  staff users from all user by filtering
   loadStaff(): void {
-    this.managerService.getStaffMembers().subscribe((data) => {
-      this.staffMembers = data;
-      console.log("staff members" + data)
+    this.userService.getAllUsers().subscribe((res) => {
+      this.staffMembers = res.filter(user => user.roleId !== 3);
+      console.log(this.staffMembers)
+    });
+  }
+  // all users
+  loadUsers(): void {
+    this.userService.getAllUsers().subscribe((res) => {
+      this.AllUsers = res;
+      console.log(this.AllUsers);
     })
   }
 
+
+
+  //not completed yet ---------------------
+
   editStaff(id: number): void {
-    // TODO: Navigate to edit staff page
-    console.log('Editing staff with ID:', id);
+
   }
 
   deleteStaff(id: number): void {
-    // TODO: Implement delete staff logic
-    console.log('Deleting staff with ID:', id);
-    // Remove from mock data for immediate view update
-    this.staffMembers = this.staffMembers.filter(s => s.id !== id);
+
   }
 
 }
