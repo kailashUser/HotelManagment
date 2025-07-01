@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { RoomService } from '../../../services/room.service';
 
 // Assuming a Room interface exists (can import from customer book-rooms if needed)
 interface Room {
@@ -24,7 +25,7 @@ interface Room {
 export class RoomListComponent implements OnInit {
   rooms: any[] = []; // Placeholder for room data
 
-  constructor() { }
+  constructor(private roomServices: RoomService) { }
 
   ngOnInit(): void {
     // Load room data (placeholder)
@@ -32,14 +33,10 @@ export class RoomListComponent implements OnInit {
   }
 
   loadRooms(): void {
-    // TODO: Implement logic to load room data with pagination
-    console.log('Loading room list...');
-    // Mock data for now
-    this.rooms = [
-      { id: 1, number: '101', type: 'Single', status: 'Available', price: 100 },
-      { id: 2, number: '102', type: 'Double', status: 'Booked', price: 150 },
-      { id: 3, number: '201', type: 'Suite', status: 'Maintenance', price: 300 },
-    ];
+    this.roomServices.getAllRooms().subscribe((data) => {
+      this.rooms = data;
+      console.log("rooms loading" + data)
+    })
   }
 
   editRoom(id: number): void {
@@ -53,4 +50,4 @@ export class RoomListComponent implements OnInit {
     // Remove from mock data for immediate view update
     this.rooms = this.rooms.filter(r => r.id !== id);
   }
-} 
+}

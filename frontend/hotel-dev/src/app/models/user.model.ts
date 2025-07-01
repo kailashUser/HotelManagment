@@ -1,8 +1,9 @@
-export interface User {
-  Username: string;
-  Email: string;
-  Role: string; // e.g., 'customer', 'manager', 'clerk'
-  FirstName: string;
-  LastName: string;
-  Phone: string;
-} 
+export interface UserDisplay {
+  username: string;
+  email: string;
+  role: string; // derived from roleId
+  firstName: string;
+  lastName: string;
+  phone: string;
+  isActive: boolean;
+}

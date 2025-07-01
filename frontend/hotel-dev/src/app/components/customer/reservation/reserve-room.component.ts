@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { jwtDecode } from 'jwt-decode';
+import { ToastrService } from 'ngx-toastr';
 import { Room } from '../../../models/room.model';
-import { RoomService } from '../../../services/room.service';
 import {
   CreateReservationDto,
   ReservationService,
 } from '../../../services/reservation.service';
-import { jwtDecode } from 'jwt-decode';
-import { ToastrService } from 'ngx-toastr';
+import { RoomService } from '../../../services/room.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-reserve-room',
@@ -36,7 +36,7 @@ export class ReserveRoomComponent implements OnInit {
     private reservationService: ReservationService,
     private toastr: ToastrService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.extractCustomerIdFromToken();
@@ -53,7 +53,7 @@ export class ReserveRoomComponent implements OnInit {
       const decoded: any = jwtDecode(token);
       this.customerId = Number(
         decoded[
-          'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
         ]
       );
     }

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { ManagerService } from '../../../services/manager.service';
 
 interface StaffMember {
   id: number;
@@ -20,7 +21,7 @@ export class StaffListComponent implements OnInit {
 
   staffMembers: StaffMember[] = [];
 
-  constructor() { }
+  constructor(private managerService: ManagerService) { }
 
   ngOnInit(): void {
     // Load staff data (placeholder)
@@ -28,13 +29,10 @@ export class StaffListComponent implements OnInit {
   }
 
   loadStaff(): void {
-    // TODO: Implement logic to load staff data
-    console.log('Loading staff list...');
-    // Mock data for now
-    this.staffMembers = [
-      { id: 1, name: 'Alice Johnson', role: 'Receptionist', email: 'alice.j@hotel.com' },
-      { id: 2, name: 'Bob Williams', role: 'Housekeeping', email: 'bob.w@hotel.com' },
-    ];
+    this.managerService.getStaffMembers().subscribe((data) => {
+      this.staffMembers = data;
+      console.log("staff members" + data)
+    })
   }
 
   editStaff(id: number): void {
@@ -49,4 +47,4 @@ export class StaffListComponent implements OnInit {
     this.staffMembers = this.staffMembers.filter(s => s.id !== id);
   }
 
-} 
+}
