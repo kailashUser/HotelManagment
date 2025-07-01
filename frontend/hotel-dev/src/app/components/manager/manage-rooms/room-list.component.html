@@ -2,7 +2,9 @@
   <h2>Manage Rooms</h2>
 
   <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-primary" routerLink="/manager/add-room">Add New Room</button>
+    <button class="btn btn-primary" routerLink="/manager/add-room">
+      Add New Room
+    </button>
   </div>
 
   <div class="table-responsive">
@@ -25,16 +27,27 @@
           <td>{{ room.status }}</td>
           <td>{{ room.price | currency }}</td>
           <td>
-            <button class="btn btn-sm btn-warning me-2" [routerLink]="['/manager/edit-room', room.id]">Edit</button>
-            <button class="btn btn-sm btn-danger" (click)="deleteRoom(room.id)">Delete</button>
+            <button
+              class="btn btn-sm btn-warning me-2"
+              [routerLink]="['/manager/edit-room', room.id]"
+            >
+              Edit
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteRoom(room.id)">
+              Delete
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div *ngIf="rooms.length === 0" class="alert alert-info text-center" role="alert">
+  <div
+    *ngIf="rooms.length === 0"
+    class="alert alert-info text-center"
+    role="alert"
+  >
     No rooms found.
   </div>
   <!-- TODO: Add Pagination Component here -->
-</div> 
+</div>
