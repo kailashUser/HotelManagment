@@ -13,6 +13,14 @@ namespace HotelReservation.Repositories
             _context = context;
         }
 
+        public async Task<bool> DeleteUserAsync(int id)
+        {
+            var sql = "DELETE FROM Users WHERE Id = @Id";
+            using var conn = _context.CreateConnection();
+            var rowsAffected = await conn.ExecuteAsync(sql, new { Id = id });
+            return rowsAffected > 0;
+        }
+
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             var sql = "SELECT * FROM Users";

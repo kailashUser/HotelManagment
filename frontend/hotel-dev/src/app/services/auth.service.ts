@@ -16,7 +16,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔐 Login
+
   login(email: string, password: string): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/Auth/login`, { email, password })
@@ -56,14 +56,14 @@ export class AuthService {
       );
   }
 
-  // 👤 Register (optional)
+
   register(userData: any): Observable<any> {
     return this.http
       .post<any>(`${this.apiUrl}/Auth/register`, userData)
       .pipe(timeout(15000), retry(1), catchError(this.handleError.bind(this)));
   }
 
-  // 🔓 Logout
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
@@ -72,7 +72,7 @@ export class AuthService {
     this.authStatusSubject.next(false);
   }
 
-  // ✅ Helpers
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
@@ -102,7 +102,7 @@ export class AuthService {
     localStorage.setItem('username', username);
   }
 
-  // 📄 Get full user profile (optional)
+  
   getUserProfile(): Observable<any> {
     const userId = this.getUserId();
     if (!userId) return throwError(() => new Error('User ID not found'));

@@ -1,9 +1,10 @@
+<!-- add-staff.component.html -->
 <div class="container py-4">
   <h2>Add New Staff Member</h2>
 
   <div class="card">
     <div class="card-body">
-      <form #staffForm="ngForm">
+      <form [formGroup]="addStaffForm" (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="username" class="form-label">Username</label>
           <input
@@ -11,8 +12,23 @@
             class="form-control"
             id="username"
             name="username"
+            formControlName="username"
             required
+            placeholder="Enter username"
+            [class.is-invalid]="
+              addStaffForm.get('username')?.invalid &&
+              addStaffForm.get('username')?.touched
+            "
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              addStaffForm.get('username')?.invalid &&
+              addStaffForm.get('username')?.touched
+            "
+          >
+            Username is required.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -23,8 +39,28 @@
             id="password"
             name="password"
             required
+            formControlName="password"
             minlength="6"
+            placeholder="Enter password (min 6 characters)"
+            [class.is-invalid]="
+              addStaffForm.get('password')?.invalid &&
+              addStaffForm.get('password')?.touched
+            "
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              addStaffForm.get('password')?.invalid &&
+              addStaffForm.get('password')?.touched
+            "
+          >
+            <div *ngIf="addStaffForm.get('password')?.errors?.['required']">
+              Password is required.
+            </div>
+            <div *ngIf="addStaffForm.get('password')?.errors?.['minlength']">
+              Password must be at least 6 characters long.
+            </div>
+          </div>
         </div>
 
         <div class="mb-3">
@@ -35,18 +71,57 @@
             id="email"
             name="email"
             required
-            email
+            formControlName="email"
+            placeholder="Enter email address"
+            [class.is-invalid]="
+              addStaffForm.get('email')?.invalid &&
+              addStaffForm.get('email')?.touched
+            "
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              addStaffForm.get('email')?.invalid &&
+              addStaffForm.get('email')?.touched
+            "
+          >
+            <div *ngIf="addStaffForm.get('email')?.errors?.['required']">
+              Email is required.
+            </div>
+            <div *ngIf="addStaffForm.get('email')?.errors?.['email']">
+              Please enter a valid email address.
+            </div>
+          </div>
         </div>
 
         <div class="mb-3">
           <label for="role" class="form-label">Role</label>
-          <select class="form-select" id="role" name="role" required>
+          <select
+            class="form-select"
+            id="role"
+            name="role"
+            formControlName="role"
+            required
+            (change)="getRoleId($any($event.target).value)"
+            [class.is-invalid]="
+              addStaffForm.get('role')?.invalid &&
+              addStaffForm.get('role')?.touched
+            "
+          >
             <option value="">Select Role</option>
-            <option value="Admin">Admin</option>
-            <option value="Manager">Manager</option>
-            <option value="Clerk">Clerk</option>
+            <option *ngFor="let role of Roles" [value]="role">
+              {{ role }}
+            </option>
           </select>
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              addStaffForm.get('role')?.invalid &&
+              addStaffForm.get('role')?.touched
+            "
+          >
+            Role is required.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -56,8 +131,23 @@
             class="form-control"
             id="firstName"
             name="firstName"
+            formControlName="firstName"
             required
+            placeholder="Enter first name"
+            [class.is-invalid]="
+              addStaffForm.get('firstName')?.invalid &&
+              addStaffForm.get('firstName')?.touched
+            "
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              addStaffForm.get('firstName')?.invalid &&
+              addStaffForm.get('firstName')?.touched
+            "
+          >
+            First name is required.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -67,8 +157,23 @@
             class="form-control"
             id="lastName"
             name="lastName"
+            formControlName="lastName"
             required
+            placeholder="Enter last name"
+            [class.is-invalid]="
+              addStaffForm.get('lastName')?.invalid &&
+              addStaffForm.get('lastName')?.touched
+            "
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              addStaffForm.get('lastName')?.invalid &&
+              addStaffForm.get('lastName')?.touched
+            "
+          >
+            Last name is required.
+          </div>
         </div>
 
         <div class="mb-3">
@@ -78,18 +183,39 @@
             class="form-control"
             id="phoneNumber"
             name="phoneNumber"
+            formControlName="phone"
             required
+            placeholder="Enter phone number"
+            [class.is-invalid]="
+              addStaffForm.get('phone')?.invalid &&
+              addStaffForm.get('phone')?.touched
+            "
           />
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              addStaffForm.get('phone')?.invalid &&
+              addStaffForm.get('phone')?.touched
+            "
+          >
+            Phone number is required.
+          </div>
         </div>
 
         <button
           type="submit"
           class="btn btn-primary"
-          [disabled]="!staffForm.form.valid"
+          [disabled]="addStaffForm.invalid"
         >
           Add Staff
         </button>
-        <button type="button" class="btn btn-secondary ms-2">Cancel</button>
+        <button
+          type="button"
+          class="btn btn-secondary ms-2"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
       </form>
     </div>
   </div>
