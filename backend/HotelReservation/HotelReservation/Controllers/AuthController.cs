@@ -50,6 +50,37 @@ namespace HotelReservation.Controllers
             return Ok(ApiResponse<string>.Ok(token, "Login successful"));
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _repo.GetUserByIdAsync(id);
+            if (user == null)
+                return NotFound(ApiResponse<string>.Fail("User not found"));
+            return Ok(ApiResponse<User>.Ok(user, "User fetched successfully"));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _repo.GetAllUsersAsync();
+            return Ok(ApiResponse<IEnumerable<User>>.Ok(users, "Users fetched successfully"));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
+        {
+            var existing = await _repo.GetUserByIdAsync(id);
+            if (existing == null)
+                return NotFound(ApiResponse<string>.Fail("User not found"));
+
+            updatedUser.Id = id;
+            var updated = await _repo.UpdateUserAsync(updatedUser);
+            if (!updated)
+                return BadRequest(ApiResponse<string>.Fail("Update failed"));
+
+            return Ok(ApiResponse<string>.Ok(null, "User updated successfully"));
+        }
+
         private string HashPassword(string password)
         {
             using var sha = SHA256.Create();

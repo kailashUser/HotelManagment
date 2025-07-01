@@ -3,7 +3,7 @@
     <div class="col-md-8">
       <div class="card">
         <div class="card-header">
-          <h4 class="mb-0">Complete Your Booking</h4>
+          <h4 class="mb-0">Complete Your Reservation</h4>
         </div>
         <div class="card-body">
           <form (ngSubmit)="onSubmit()" #bookingForm="ngForm">
@@ -15,11 +15,25 @@
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label class="form-label">Check-in Date</label>
-                      <input type="date" class="form-control" 
-                             [class.is-invalid]="checkInInput.invalid && (checkInInput.touched || bookingForm.submitted)"
-                             [(ngModel)]="booking.checkIn" 
-                             name="checkIn" required #checkInInput="ngModel">
-                      <div class="invalid-feedback" *ngIf="checkInInput.invalid && (checkInInput.touched || bookingForm.submitted)">
+                      <input
+                        type="date"
+                        class="form-control"
+                        [class.is-invalid]="
+                          checkInInput.invalid &&
+                          (checkInInput.touched || bookingForm.submitted)
+                        "
+                        [(ngModel)]="booking.checkIn"
+                        name="checkIn"
+                        required
+                        #checkInInput="ngModel"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          checkInInput.invalid &&
+                          (checkInInput.touched || bookingForm.submitted)
+                        "
+                      >
                         <div *ngIf="checkInInput.errors?.['required']">
                           Check-in date is required.
                         </div>
@@ -27,11 +41,25 @@
                     </div>
                     <div class="col-md-6 mb-3">
                       <label class="form-label">Check-out Date</label>
-                      <input type="date" class="form-control" 
-                             [class.is-invalid]="checkOutInput.invalid && (checkOutInput.touched || bookingForm.submitted)"
-                             [(ngModel)]="booking.checkOut" 
-                             name="checkOut" required #checkOutInput="ngModel">
-                       <div class="invalid-feedback" *ngIf="checkOutInput.invalid && (checkOutInput.touched || bookingForm.submitted)">
+                      <input
+                        type="date"
+                        class="form-control"
+                        [class.is-invalid]="
+                          checkOutInput.invalid &&
+                          (checkOutInput.touched || bookingForm.submitted)
+                        "
+                        [(ngModel)]="booking.checkOut"
+                        name="checkOut"
+                        required
+                        #checkOutInput="ngModel"
+                      />
+                      <div
+                        class="invalid-feedback"
+                        *ngIf="
+                          checkOutInput.invalid &&
+                          (checkOutInput.touched || bookingForm.submitted)
+                        "
+                      >
                         <div *ngIf="checkOutInput.errors?.['required']">
                           Check-out date is required.
                         </div>
@@ -40,27 +68,46 @@
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Number of Guests</label>
-                    <input type="number" class="form-control" 
-                           [class.is-invalid]="guestsInput.invalid && (guestsInput.touched || bookingForm.submitted)"
-                           [(ngModel)]="booking.guests" 
-                           name="guests" min="1" max="4" required #guestsInput="ngModel">
-                    <div class="invalid-feedback" *ngIf="guestsInput.invalid && (guestsInput.touched || bookingForm.submitted)">
+                    <input
+                      type="number"
+                      class="form-control"
+                      [class.is-invalid]="
+                        guestsInput.invalid &&
+                        (guestsInput.touched || bookingForm.submitted)
+                      "
+                      [(ngModel)]="booking.guests"
+                      name="guests"
+                      min="1"
+                      max="4"
+                      required
+                      #guestsInput="ngModel"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        guestsInput.invalid &&
+                        (guestsInput.touched || bookingForm.submitted)
+                      "
+                    >
                       <div *ngIf="guestsInput.errors?.['required']">
                         Number of guests is required.
                       </div>
                       <div *ngIf="guestsInput.errors?.['min']">
                         Number of guests must be at least 1.
                       </div>
-                       <div *ngIf="guestsInput.errors?.['max']">
+                      <div *ngIf="guestsInput.errors?.['max']">
                         Number of guests cannot exceed 4.
                       </div>
                     </div>
                   </div>
                   <div class="mb-3">
                     <label class="form-label">Special Requests</label>
-                    <textarea class="form-control" 
-                              [(ngModel)]="booking.specialRequests" 
-                              name="specialRequests" rows="3"></textarea>
+                    <textarea
+                      class="form-control"
+                      [(ngModel)]="booking.specialRequests"
+                      name="specialRequests"
+                      rows="3"
+                    ></textarea>
                   </div>
                 </div>
 
@@ -68,40 +115,56 @@
                 <div class="mb-4">
                   <h5>Payment Method</h5>
                   <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" 
-                           [(ngModel)]="booking.paymentMethod" 
-                           name="paymentMethod" value="credit" required>
-                    <label class="form-check-label">
-                      Credit Card
-                    </label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      [(ngModel)]="booking.paymentMethod"
+                      name="paymentMethod"
+                      value="credit"
+                      required
+                    />
+                    <label class="form-check-label"> Credit Card </label>
                   </div>
                   <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" 
-                           [(ngModel)]="booking.paymentMethod" 
-                           name="paymentMethod" value="debit">
-                    <label class="form-check-label">
-                      Debit Card
-                    </label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      [(ngModel)]="booking.paymentMethod"
+                      name="paymentMethod"
+                      value="debit"
+                    />
+                    <label class="form-check-label"> Debit Card </label>
                   </div>
                   <div class="form-check mb-2">
-                    <input class="form-check-input" type="radio" 
-                           [(ngModel)]="booking.paymentMethod" 
-                           name="paymentMethod" value="upi">
-                    <label class="form-check-label">
-                      UPI
-                    </label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      [(ngModel)]="booking.paymentMethod"
+                      name="paymentMethod"
+                      value="upi"
+                    />
+                    <label class="form-check-label"> UPI </label>
                   </div>
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" 
-                           [(ngModel)]="booking.paymentMethod" 
-                           name="paymentMethod" value="visa">
-                    <label class="form-check-label">
-                      VISA
-                    </label>
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      [(ngModel)]="booking.paymentMethod"
+                      name="paymentMethod"
+                      value="visa"
+                    />
+                    <label class="form-check-label"> VISA </label>
                   </div>
-                   <div class="text-danger" *ngIf="bookingForm.controls['paymentMethod']?.invalid && (bookingForm.controls['paymentMethod']?.touched || bookingForm.submitted)">
-                     Payment method is required.
-                   </div>
+                  <div
+                    class="text-danger"
+                    *ngIf="
+                      bookingForm.controls['paymentMethod']?.invalid &&
+                      (bookingForm.controls['paymentMethod']?.touched ||
+                        bookingForm.submitted)
+                    "
+                  >
+                    Payment method is required.
+                  </div>
                 </div>
               </div>
 
@@ -126,7 +189,7 @@
                       <span>Tax (10%)</span>
                       <span>${{ formatPrice(tax) }}</span>
                     </div>
-                    <hr>
+                    <hr />
                     <div class="d-flex justify-content-between">
                       <strong>Total</strong>
                       <strong>${{ formatPrice(total) }}</strong>
@@ -137,9 +200,12 @@
             </div>
 
             <div class="d-grid">
-              <button type="submit" class="btn btn-primary" 
-                      [disabled]="!bookingForm.form.valid">
-                Proceed to Payment
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="!bookingForm.form.valid"
+              >
+                Add Payment Methods
               </button>
             </div>
           </form>
@@ -147,4 +213,4 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
