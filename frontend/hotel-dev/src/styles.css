@@ -1,0 +1,59 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import '../node_modules/bootstrap-icons/font/bootstrap-icons.css';
+@import 'ngx-toastr/toastr';
+
+:root {
+  --bs-primary: #000000;
+  --bs-primary-rgb: 0, 0, 0;
+}
+
+.btn-primary {
+  background-color: #000000;
+  border-color: #000000;
+}
+
+.btn-primary:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+.text-primary {
+  color: #000000 !important;
+}
+
+.bg-primary {
+  background-color: #000000 !important;
+}
+
+/* Bootstrap form floating label fix */
+.form-floating label {
+  color: #6c757d;
+}
+
+/* Bootstrap button group fix */
+.btn-group > .btn:not(:last-child):not(.dropdown-toggle),
+.btn-group > .btn:not(:first-child) {
+  border-radius: 0;
+}
+
+/* Fix for Bootstrap selector warnings */
+.form-floating label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  padding: 1rem 0.75rem;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transform-origin: 0 0;
+  transition: opacity .1s ease-in-out,transform .1s ease-in-out;
+}
+
+.btn-group .btn + .btn {
+  margin-left: -1px;
+}
+
+.btn-group-vertical .btn + .btn {
+  margin-top: -1px;
+}

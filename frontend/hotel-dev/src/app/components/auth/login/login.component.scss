@@ -1,0 +1,58 @@
+// Custom styles for login component
+.card {
+  transition: transform 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.form-floating {
+  > label {
+    color: #6c757d;
+  }
+  
+  > .form-control {
+    &:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+  }
+}
+
+.btn-primary {
+  transition: all 0.2s ease-in-out;
+  background-color: #343a40; // Dark gray color from Bootstrap's btn-dark
+  border-color: #343a40;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #23272b; // Darker hover color
+    border-color: #1d2124;
+  }
+
+  &:active {
+    transform: translateY(0);
+    background-color: #1c1f23; // Even darker active color
+    border-color: #161a1d;
+  }
+}
+
+// Custom animation for loading spinner
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-border {
+  animation: spin 1s linear infinite;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .card {
+    margin: 1rem;
+  }
+} 

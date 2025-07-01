@@ -1,0 +1,116 @@
+<div class="container">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-primary text-white text-center py-4">
+          <h3 class="mb-0">Create Account</h3>
+          <p class="mb-0">Please fill in your details</p>
+        </div>
+        <div class="card-body p-4">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <!-- Username Field -->
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input 
+                type="text" 
+                id="username" 
+                formControlName="username" 
+                class="form-control"
+                [class.is-invalid]="username?.invalid && username?.touched">
+              <div *ngIf="username?.invalid && username?.touched" class="invalid-feedback">
+                {{ getFieldError('username') }}
+              </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email" 
+                class="form-control"
+                [class.is-invalid]="email?.invalid && email?.touched">
+              <div *ngIf="email?.invalid && email?.touched" class="invalid-feedback">
+                {{ getFieldError('email') }}
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                id="password" 
+                formControlName="password" 
+                class="form-control"
+                [class.is-invalid]="password?.invalid && password?.touched">
+              <div *ngIf="password?.invalid && password?.touched" class="invalid-feedback">
+                {{ getFieldError('password') }}
+              </div>
+            </div>
+
+            <!-- First Name Field -->
+            <div class="mb-3">
+              <label for="firstName" class="form-label">First Name</label>
+              <input 
+                type="text" 
+                id="firstName" 
+                formControlName="firstName" 
+                class="form-control"
+                [class.is-invalid]="firstName?.invalid && firstName?.touched">
+              <div *ngIf="firstName?.invalid && firstName?.touched" class="invalid-feedback">
+                {{ getFieldError('firstName') }}
+              </div>
+            </div>
+
+            <!-- Last Name Field -->
+            <div class="mb-3">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input 
+                type="text" 
+                id="lastName" 
+                formControlName="lastName" 
+                class="form-control"
+                [class.is-invalid]="lastName?.invalid && lastName?.touched">
+              <div *ngIf="lastName?.invalid && lastName?.touched" class="invalid-feedback">
+                {{ getFieldError('lastName') }}
+              </div>
+            </div>
+
+            <!-- Phone Field -->
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                formControlName="phone" 
+                class="form-control"
+                [class.is-invalid]="phone?.invalid && phone?.touched">
+              <div *ngIf="phone?.invalid && phone?.touched" class="invalid-feedback">
+                {{ getFieldError('phone') }}
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid gap-2">
+              <button 
+                type="submit" 
+                class="btn btn-primary btn-lg" 
+                [disabled]="isSubmitting">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+                {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer text-center py-3">
+          <div class="small">
+            Already have an account? 
+            <a routerLink="/login" class="text-decoration-none">Login here</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,89 @@
+.hero-section {
+  min-height: 75vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.hero-image img {
+  object-fit: cover;
+}
+
+.min-vh-75 {
+  min-height: 75vh;
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.card {
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+.bi {
+  font-size: 1.2rem;
+}
+
+/* Custom styles for sections */
+section {
+  padding: 80px 0;
+}
+
+section h2 {
+  margin-bottom: 40px;
+  position: relative;
+}
+
+section h2:after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: var(--bs-primary);
+  margin: 20px auto;
+}
+
+/* Review card styles */
+.review-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Location section styles */
+.location-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 50vh;
+  }
+  
+  section {
+    padding: 40px 0;
+  }
+}
+
+.landing-btn {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+}
+
+.landing-btn:hover {
+  background-color: #0b5ed7 !important;
+  border-color: #0a58ca !important;
+}

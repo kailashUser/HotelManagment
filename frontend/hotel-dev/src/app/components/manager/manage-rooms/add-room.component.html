@@ -1,0 +1,52 @@
+<div class="container py-4">
+  <h2>Add New Room</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <form #roomForm="ngForm" (ngSubmit)="addRoom()">
+        <div class="mb-3">
+          <label for="number" class="form-label">Room Number</label>
+          <input type="text" class="form-control" id="number"
+                 [(ngModel)]="newRoom.number" name="number" required>
+           <!-- Add validation feedback here -->
+        </div>
+         <div class="mb-3">
+          <label for="type" class="form-label">Room Type</label>
+          <input type="text" class="form-control" id="type"
+                 [(ngModel)]="newRoom.type" name="type" required>
+           <!-- Add validation feedback here -->
+        </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Price per Night</label>
+          <input type="number" class="form-control" id="price"
+                 [(ngModel)]="newRoom.price" name="price" required min="0">
+            <!-- Add validation feedback here -->
+        </div>
+        <div class="mb-3">
+          <label for="capacity" class="form-label">Capacity</label>
+          <input type="number" class="form-control" id="capacity"
+                 [(ngModel)]="newRoom.capacity" name="capacity" required min="1">
+            <!-- Add validation feedback here -->
+        </div>
+         <div class="mb-3">
+          <label for="amenities" class="form-label">Amenities (comma-separated)</label>
+          <input type="text" class="form-control" id="amenities"
+                 [(ngModel)]="newRoom.amenities" name="amenities">
+        </div>
+         <div class="mb-3">
+          <label for="imageUrl" class="form-label">Image URL</label>
+          <input type="text" class="form-control" id="imageUrl"
+                 [(ngModel)]="newRoom.imageUrl" name="imageUrl">
+        </div>
+         <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="available"
+                 [(ngModel)]="newRoom.available" name="available">
+          <label class="form-check-label" for="available">Available</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="!roomForm.form.valid">Add Room</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div> 

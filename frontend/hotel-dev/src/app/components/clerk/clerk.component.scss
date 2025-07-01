@@ -1,0 +1,131 @@
+.clerk-dashboard {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+
+  .header-section {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card {
+    border: none;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  .info-item {
+    label {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+  }
+
+  .table {
+    th {
+      font-weight: 600;
+      color: #495057;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+  }
+
+  .badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+  }
+
+  .btn {
+    font-weight: 500;
+    
+    &.btn-outline-primary,
+    &.btn-outline-success,
+    &.btn-outline-info,
+    &.btn-outline-warning {
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  // Custom scrollbar for table
+  .table-responsive {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  }
+}
+
+.form-control, .form-select {
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    border-color: #86b7fe;
+  }
+}
+
+.invalid-feedback {
+  font-size: 0.875rem;
+}
+
+.btn-primary {
+  transition: all 0.2s ease-in-out;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.card-header {
+  background: linear-gradient(45deg, #0d6efd, #0a58ca);
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .card {
+    margin: 1rem;
+  }
+  
+  .card-body {
+    padding: 1.5rem !important;
+  }
+} 

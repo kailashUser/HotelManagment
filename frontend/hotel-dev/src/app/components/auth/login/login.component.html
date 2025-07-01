@@ -1,0 +1,78 @@
+<!-- Login Form -->
+<div class="container">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6 col-lg-5">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-header bg-primary text-white text-center py-4">
+          <h3 class="mb-0">Welcome Back</h3>
+          <p class="mb-0">Please login to your account</p>
+        </div>
+        <div class="card-body p-4">
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- Email Field -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                formControlName="email" 
+                placeholder="Enter your email"
+                [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
+              <div class="invalid-feedback" *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched">
+                Email is required
+              </div>
+              <div class="invalid-feedback" *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched">
+                Please enter a valid email
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                formControlName="password" 
+                placeholder="Enter your password"
+                [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+              <div class="invalid-feedback" *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched">
+                Password is required
+              </div>
+            </div>
+
+            <!-- Remember Me -->
+            <div class="mb-3 form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe" formControlName="rememberMe">
+              <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid mb-3">
+              <button 
+                type="submit" 
+                class="btn btn-primary" 
+                [disabled]="loginForm.invalid || isLoading">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                {{ isLoading ? 'Logging in...' : 'Login' }}
+              </button>
+            </div>
+          </form>
+          
+          <!-- Register Link -->
+          <div class="text-center">
+            Don't have an account? 
+            <a routerLink="/register" class="text-decoration-none">Register here</a>
+          </div>
+        </div>
+        <div class="card-footer text-center py-3">
+          <div class="small">
+            Don't have an account? 
+            <a routerLink="/register" class="text-decoration-none">Sign up now!</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,83 @@
+<div class="container-fluid py-5">
+  <div class="container">
+    <h1 class="mb-4">Browse Our Rooms</h1>
+
+    <!-- Room Grid -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+      <div class="col" *ngFor="let room of getCurrentPageRooms()">
+        <div class="card h-100 shadow-sm">
+          <!-- <img [src]="room.imageUrl" class="card-img-top" alt="Room {{room.roomNumber}}" style="height: 200px; object-fit: cover;"> -->
+          <img [src]="'../../../../assets/rooms.jpg'" class="card-img-top" alt="Room {{room.roomNumber}}"
+            style="height: 200px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title">{{room.type}} - Room {{room.roomNumber}}</h5>
+            <p class="card-text">
+              <span class="badge bg-primary mb-2">${{room.price}}/night</span>
+              <span class="badge bg-secondary mb-2">Up to {{room.capacity}} guests</span>
+            </p>
+            <div class="mb-3">
+              <small class="text-muted">Amenities:</small>
+              <div>
+                <span class="badge bg-light text-dark me-1" *ngFor="let amenity of room.amenities">
+                  {{amenity}}
+                </span>
+              </div>
+            </div>
+            <button class="btn btn-primary w-100" [disabled]="!room.isAvailable" (click)="openReservationModal(room)">
+              {{room.isAvailable ? 'Reserve Now' : 'Not Available'}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <nav aria-label="Room navigation" class="d-flex justify-content-center">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" href="#" (click)="previousPage(); $event.preventDefault()">Previous</a>
+        </li>
+        <li class="page-item active">
+          <span class="page-link">Page {{currentPage}} of {{totalPages}}</span>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" href="#" (click)="nextPage(); $event.preventDefault()">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- Reservation Modal -->
+<div class="modal fade show" [class.d-block]="showReservationModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Reserve Room {{selectedRoom?.roomNumber}}</h5>
+        <button type="button" class="btn-close" (click)="closeReservationModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submitReservation()">
+          <div class="mb-3">
+            <label class="form-label">Check-in Date</label>
+            <input type="date" class="form-control" [(ngModel)]="reservationDates.checkIn" name="checkIn" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Check-out Date</label>
+            <input type="date" class="form-control" [(ngModel)]="reservationDates.checkOut" name="checkOut" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Number of Guests</label>
+            <input type="number" class="form-control" [(ngModel)]="reservationDates.guests" name="guests" min="1"
+              [min]="1" [max]="selectedRoom?.capacity ?? null" required>>
+          </div>
+          <div class="text-end">
+            <button type="button" class="btn btn-secondary me-2" (click)="closeReservationModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Confirm Reservation</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" *ngIf="showReservationModal"></div>

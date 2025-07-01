@@ -1,0 +1,133 @@
+{
+  "rooms": [
+    {
+      "id": 1,
+      "number": "101",
+      "type": "Standard",
+      "status": "Available",
+      "price": 100,
+      "capacity": 2,
+      "amenities": ["TV", "Wi-Fi", "Air Conditioning"]
+    },
+    {
+      "id": 2,
+      "number": "102",
+      "type": "Deluxe",
+      "status": "Occupied",
+      "price": 150,
+      "capacity": 2,
+      "amenities": ["TV", "Wi-Fi", "Air Conditioning", "Mini Bar"]
+    },
+    {
+      "id": 3,
+      "number": "201",
+      "type": "Suite",
+      "status": "Available",
+      "price": 200,
+      "capacity": 4,
+      "amenities": ["TV", "Wi-Fi", "Air Conditioning", "Mini Bar", "Living Room"]
+    },
+    {
+      "id": 4,
+      "number": "202",
+      "type": "Standard",
+      "status": "Maintenance",
+      "price": 100,
+      "capacity": 2,
+      "amenities": ["TV", "Wi-Fi", "Air Conditioning"]
+    },
+    {
+      "id": 5,
+      "number": "301",
+      "type": "Deluxe",
+      "status": "Available",
+      "price": 150,
+      "capacity": 2,
+      "amenities": ["TV", "Wi-Fi", "Air Conditioning", "Mini Bar"]
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890",
+      "address": "123 Main St, City"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "phone": "234-567-8901",
+      "address": "456 Oak St, Town"
+    },
+    {
+      "id": 3,
+      "name": "Bob Johnson",
+      "email": "bob.johnson@example.com",
+      "phone": "345-678-9012",
+      "address": "789 Pine St, Village"
+    }
+  ],
+  "travelCompanies": [
+    {
+      "id": 1,
+      "name": "Travel Pro",
+      "email": "info@travelpro.com",
+      "phone": "111-222-3333",
+      "address": "321 Travel Ave, City"
+    },
+    {
+      "id": 2,
+      "name": "Vacation Experts",
+      "email": "contact@vacationexperts.com",
+      "phone": "444-555-6666",
+      "address": "654 Holiday Blvd, Town"
+    }
+  ],
+  "reservations": [
+    {
+      "id": 1,
+      "guestName": "John Doe",
+      "roomNumber": "102",
+      "checkInDate": "2024-03-20",
+      "checkOutDate": "2024-03-25",
+      "source": "customer",
+      "sourceId": 1,
+      "status": "Active",
+      "addOns": {
+        "breakfast": true,
+        "wifi": true,
+        "parking": false
+      },
+      "stayCharges": 750,
+      "taxes": 75,
+      "totalAmount": 825
+    },
+    {
+      "id": 2,
+      "guestName": "Sarah Wilson",
+      "roomNumber": "201",
+      "checkInDate": "2024-03-22",
+      "checkOutDate": "2024-03-24",
+      "source": "travelCompany",
+      "sourceId": 1,
+      "status": "Active",
+      "addOns": {
+        "breakfast": true,
+        "wifi": true,
+        "parking": true
+      },
+      "stayCharges": 400,
+      "taxes": 40,
+      "totalAmount": 440
+    }
+  ],
+  "clerkProfile": {
+    "id": 1,
+    "name": "Alice Clerk",
+    "email": "alice.clerk@hotel.com",
+    "phone": "555-123-4567",
+    "role": "Front Desk Clerk"
+  }
+} 

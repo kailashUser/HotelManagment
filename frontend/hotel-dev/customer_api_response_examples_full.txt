@@ -1,0 +1,96 @@
+# 1. Get All Customers (GET /api/Customer)
+{
+  "success": true,
+  "message": "Customers retrieved successfully",
+  "data": [
+    {
+      "id": 1,
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane.smith@example.com",
+      "phoneNumber": "555-5678",
+      "address": "789 Oak Avenue",
+      "createdAt": "2025-06-01T00:00:00.000Z",
+      "updatedAt": "2025-06-07T01:56:08.149Z"
+    },
+    {
+      "id": 2,
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@example.com",
+      "phoneNumber": "555-1234",
+      "address": "123 Main St",
+      "createdAt": "2025-06-01T00:00:00.000Z",
+      "updatedAt": "2025-06-07T01:56:08.149Z"
+    }
+  ]
+}
+
+# 2. Get Customer by ID (GET /api/Customer/{id})
+{
+  "success": true,
+  "message": "Customer found",
+  "data": {
+    "id": 1,
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "phoneNumber": "555-5678",
+    "address": "789 Oak Avenue",
+    "createdAt": "2025-06-01T00:00:00.000Z",
+    "updatedAt": "2025-06-07T01:56:08.149Z"
+  }
+}
+
+# 3. Create a New Customer (POST /api/Customer)
+{
+  "success": true,
+  "message": "Customer created",
+  "data": 3
+}
+
+# 4. Update a Customer (PUT /api/Customer)
+{
+  "success": true,
+  "message": "Customer updated",
+  "data": null
+}
+
+# 5. Delete a Customer (DELETE /api/Customer/{id})
+{
+  "success": true,
+  "message": "Customer deleted",
+  "data": null
+}
+
+# 6. Get Logged-in Customer Profile (GET /api/Customer/profile)
+{
+  "success": true,
+  "message": "Customer found",
+  "data": {
+    "id": 1,
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "phoneNumber": "555-5678",
+    "address": "789 Oak Avenue",
+    "createdAt": "2025-06-01T00:00:00.000Z",
+    "updatedAt": "2025-06-07T01:56:08.149Z"
+  }
+}
+
+# 7. Update Logged-in Customer Profile (PUT /api/Customer/profile)
+{
+  "success": true,
+  "message": "Customer profile updated successfully",
+  "data": {
+    "id": 1,
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "jane.smith@example.com",
+    "phoneNumber": "555-5678",
+    "address": "789 Oak Avenue",
+    "createdAt": "2025-06-01T00:00:00.000Z",
+    "updatedAt": "2025-06-07T02:00:00.000Z"
+  }
+} 

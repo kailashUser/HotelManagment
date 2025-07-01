@@ -1,0 +1,36 @@
+<div class="container py-4">
+  <h2>Add New Staff Member</h2>
+
+  <div class="card">
+    <div class="card-body">
+      <form #staffForm="ngForm" (ngSubmit)="addStaff()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name"
+                 [(ngModel)]="newStaff.name" name="name" required>
+           <!-- Add validation feedback here -->
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email"
+                 [(ngModel)]="newStaff.email" name="email" required email>
+            <!-- Add validation feedback here -->
+        </div>
+        <div class="mb-3">
+          <label for="role" class="form-label">Role</label>
+           <select class="form-select" id="role"
+                  [(ngModel)]="newStaff.role" name="role" required>
+            <option value="">Select Role</option>
+            <option value="Receptionist">Receptionist</option>
+            <option value="Housekeeping">Housekeeping</option>
+            <option value="Manager">Manager</option>
+          </select>
+            <!-- Add validation feedback here -->
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="!staffForm.form.valid">Add Staff</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div> 

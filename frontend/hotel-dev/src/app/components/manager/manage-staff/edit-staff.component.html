@@ -1,0 +1,39 @@
+<div class="container py-4">
+  <h2>Edit Staff Member</h2>
+
+  <div *ngIf="staffData" class="card">
+    <div class="card-body">
+      <form #staffForm="ngForm" (ngSubmit)="updateStaff()">
+        <div class="mb-3">
+          <label for="name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="name"
+                 [(ngModel)]="staffData.name" name="name" required>
+           <!-- Add validation feedback here -->
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="email"
+                 [(ngModel)]="staffData.email" name="email" required email>
+            <!-- Add validation feedback here -->
+        </div>
+        <div class="mb-3">
+          <label for="role" class="form-label">Role</label>
+           <select class="form-select" id="role"
+                  [(ngModel)]="staffData.role" name="role" required>
+            <option value="">Select Role</option>
+            <option value="Receptionist">Receptionist</option>
+            <option value="Housekeeping">Housekeeping</option>
+            <option value="Manager">Manager</option>
+          </select>
+            <!-- Add validation feedback here -->
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Staff</button>
+        <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+      </form>
+    </div>
+  </div>
+   <div *ngIf="!staffData">
+    <p>Loading staff member details or staff member not found...</p>
+  </div>
+</div> 

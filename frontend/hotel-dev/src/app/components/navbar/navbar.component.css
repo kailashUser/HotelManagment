@@ -1,0 +1,128 @@
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50 !important;
+  transition: color 0.3s ease;
+}
+
+.navbar-brand:hover {
+  color: #3498db !important;
+}
+
+.nav-link {
+  color: #2c3e50 !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #3498db !important;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #3498db;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 80%;
+}
+
+.nav-link.disabled {
+  color: #6c757d !important;
+  cursor: default;
+}
+
+.nav-link.disabled::after {
+  display: none;
+}
+
+.navbar-toggler {
+  border: none;
+  padding: 0.5rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+  outline: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(44, 62, 80, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Role-specific styling */
+.nav-link[routerLink="/profile"] {
+  color: #27ae60 !important;
+}
+
+.nav-link[routerLink="/book-room"],
+.nav-link[routerLink="/browse-rooms"] {
+  color: #e74c3c !important;
+}
+
+.nav-link[routerLink="/my-reservations"],
+.nav-link[routerLink="/customer-reservations"] {
+  color: #f39c12 !important;
+}
+
+.nav-link[routerLink="/dashboard"],
+.nav-link[routerLink="/manage-rooms"],
+.nav-link[routerLink="/manage-users"],
+.nav-link[routerLink="/manage-room-states"] {
+  color: #8e44ad !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background-color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+  }
+
+  .nav-link::after {
+    display: none;
+  }
+
+  .navbar-nav {
+    gap: 0.5rem;
+  }
+}
+
+/* Animation for dropdown */
+.navbar-collapse {
+  transition: all 0.3s ease-in-out;
+}
+
+/* User info styling */
+.nav-link.disabled .text-muted {
+  font-size: 0.85rem;
+  margin-left: 0.25rem;
+}
+
+/* Logout button styling */
+.nav-link[style*="cursor: pointer"] {
+  color: #e74c3c !important;
+}
+
+.nav-link[style*="cursor: pointer"]:hover {
+  color: #c0392b !important;
+}
