@@ -3,34 +3,94 @@
 
   <div class="card">
     <div class="card-body">
-      <form #staffForm="ngForm" (ngSubmit)="addStaff()">
+      <form #staffForm="ngForm">
         <div class="mb-3">
-          <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name"
-                 [(ngModel)]="newStaff.name" name="name" required>
-           <!-- Add validation feedback here -->
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email"
-                 [(ngModel)]="newStaff.email" name="email" required email>
-            <!-- Add validation feedback here -->
-        </div>
-        <div class="mb-3">
-          <label for="role" class="form-label">Role</label>
-           <select class="form-select" id="role"
-                  [(ngModel)]="newStaff.role" name="role" required>
-            <option value="">Select Role</option>
-            <option value="Receptionist">Receptionist</option>
-            <option value="Housekeeping">Housekeeping</option>
-            <option value="Manager">Manager</option>
-          </select>
-            <!-- Add validation feedback here -->
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            name="username"
+            required
+          />
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="!staffForm.form.valid">Add Staff</button>
-        <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+            minlength="6"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            required
+            email
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="role" class="form-label">Role</label>
+          <select class="form-select" id="role" name="role" required>
+            <option value="">Select Role</option>
+            <option value="Admin">Admin</option>
+            <option value="Manager">Manager</option>
+            <option value="Clerk">Clerk</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="firstName" class="form-label">First Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="firstName"
+            name="firstName"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="lastName"
+            name="lastName"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="phoneNumber" class="form-label">Phone Number</label>
+          <input
+            type="tel"
+            class="form-control"
+            id="phoneNumber"
+            name="phoneNumber"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="!staffForm.form.valid"
+        >
+          Add Staff
+        </button>
+        <button type="button" class="btn btn-secondary ms-2">Cancel</button>
       </form>
     </div>
   </div>
-</div> 
+</div>
