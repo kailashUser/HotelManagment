@@ -54,7 +54,15 @@ export class StaffListComponent implements OnInit {
   }
 
   deleteStaff(id: number): void {
-
+    this.userService.deleteUser(id).subscribe({
+      next: () => {
+        console.log("user deleted");
+        this.loadStaff();
+      },
+      error: (err) => {
+        console.log('error deleting user', err)
+      }
+    })
   }
 
 }

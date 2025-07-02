@@ -81,6 +81,20 @@ namespace HotelReservation.Controllers
             return Ok(ApiResponse<string>.Ok(null, "User updated successfully"));
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var existing = await _repo.GetUserByIdAsync(id);
+            if (existing == null)
+                return NotFound(ApiResponse<string>.Fail("User not found"));
+
+            var deleted = await _repo.DeleteUserAsync(id);
+            if (!deleted)
+                return BadRequest(ApiResponse<string>.Fail("Delete failed"));
+
+            return Ok(ApiResponse<string>.Ok(null, "User deleted successfully"));
+        }
+
         private string HashPassword(string password)
         {
             using var sha = SHA256.Create();

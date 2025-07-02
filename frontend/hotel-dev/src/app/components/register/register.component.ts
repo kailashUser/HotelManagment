@@ -1,8 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -23,12 +23,12 @@ export class RegisterComponent {
     private toastr: ToastrService
   ) {
     this.registerForm = this.fb.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
-      phone: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]]
+      username: [' ', [Validators.required, Validators.minLength(3)]],
+      email: [' ', [Validators.required, Validators.email]],
+      password: [' ', [Validators.required, Validators.minLength(6)]],
+      firstName: [' ', [Validators.required, Validators.minLength(2)]],
+      lastName: [' ', [Validators.required, Validators.minLength(2)]],
+      phone: [' ', [Validators.required, Validators.pattern('^[0-9]{10}$')]]
     });
   }
 
@@ -77,17 +77,17 @@ export class RegisterComponent {
       FirstName: formData.firstName,
       LastName: formData.lastName,
       PhoneNumber: formData.phone,
-      RoleId: 3,                      
-      IsActive: true                   
+      RoleId: 3,
+      IsActive: true
     };
-    
+
     console.log('Submitting registration data:', backendFormData);
 
     this.authService.register(backendFormData).subscribe({
       next: (response: any) => {
         this.isSubmitting = false;
         console.log('Registration response:', response);
-        
+
         if (response?.success === true) {
           this.toastr.success('Registration successful! Please login.', 'Success');
           this.router.navigate(['/login']);
@@ -98,9 +98,9 @@ export class RegisterComponent {
       error: (error: any) => {
         this.isSubmitting = false;
         console.error('Registration error:', error);
-        
+
         let errorMessage = 'Registration failed. Please try again.';
-        
+
         if (error?.message) {
           errorMessage = error.message;
         } else if (error?.error?.message) {
@@ -110,7 +110,7 @@ export class RegisterComponent {
           const errors = Object.values(error.error.errors).flat();
           errorMessage = errors.join(', ');
         }
-        
+
         this.toastr.error(errorMessage, 'Registration Failed');
       }
     });
@@ -126,7 +126,7 @@ export class RegisterComponent {
   // Helper method to get form control errors
   getFieldError(fieldName: string): string {
     const field = this.registerForm.get(fieldName);
-    
+
     if (field?.errors && field?.touched) {
       if (field.errors['required']) {
         return `${this.getFieldDisplayName(fieldName)} is required`;
@@ -144,7 +144,7 @@ export class RegisterComponent {
         }
       }
     }
-    
+
     return '';
   }
 
@@ -157,7 +157,7 @@ export class RegisterComponent {
       lastName: 'Last Name',
       phone: 'Phone'
     };
-    
+
     return displayNames[fieldName] || fieldName;
   }
 }
