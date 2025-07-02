@@ -44,17 +44,17 @@ namespace HotelReservation.Repositories
 
         public async Task<int> RegisterAsync(User user)
         {
-            //var sql = @"INSERT INTO Users (Username, Email, PasswordHash, Role, CustomerId, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
-            //            VALUES (@Username, @Email, @PasswordHash, @Role, @CustomerId, @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
-            //            SELECT CAST(SCOPE_IDENTITY() as int);";
-            //using var conn = _context.CreateConnection();
-            //return await conn.ExecuteScalarAsync<int>(sql, user);
-
-            var sql = @"INSERT INTO Users (Username, Email, PasswordHash, RoleID, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
-                        VALUES (@Username, @Email, @PasswordHash, @RoleId , @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
+            var sql = @"INSERT INTO Users (Username, Email, PasswordHash, RoleID, CustomerId, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
+                        VALUES (@Username, @Email, @PasswordHash, @RoleId, @CustomerId, @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
                         SELECT CAST(SCOPE_IDENTITY() as int);";
             using var conn = _context.CreateConnection();
             return await conn.ExecuteScalarAsync<int>(sql, user);
+
+            //var sql = @"INSERT INTO Users (Username, Email, PasswordHash, RoleID, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
+            //            VALUES (@Username, @Email, @PasswordHash, @RoleId , @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
+            //            SELECT CAST(SCOPE_IDENTITY() as int);";
+            //using var conn = _context.CreateConnection();
+            //return await conn.ExecuteScalarAsync<int>(sql, user);
         }
 
         public async Task<bool> UpdateUserAsync(User user)

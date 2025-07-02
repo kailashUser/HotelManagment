@@ -33,21 +33,33 @@ namespace HotelReservation.Repositories
             return await conn.ExecuteScalarAsync<int>(sql, room);
         }
 
-        public async Task<bool> UpdateAsync(Room room)
-        {
-            var sql = @"UPDATE Rooms SET RoomNumber = @RoomNumber, Type = @Type, BasePrice = @BasePrice,
-                         Capacity = @Capacity, Description = @Description, IsAvailable = @IsAvailable, UpdatedAt = @UpdatedAt
-                         WHERE Id = @Id";
-            using var conn = _context.CreateConnection();
-            var rows = await conn.ExecuteAsync(sql, room);
-            return rows > 0;
-        }
+      
 
         public async Task<bool> DeleteAsync(int id)
         {
             var sql = "DELETE FROM Rooms WHERE Id = @Id";
             using var conn = _context.CreateConnection();
             var rows = await conn.ExecuteAsync(sql, new { Id = id });
+            return rows > 0;
+        }
+
+        public async Task<bool> UpdateAsync(int id, Room room)
+        {
+            var sql = @"UPDATE Rooms SET RoomNumber = @RoomNumber, Type = @Type, BasePrice = @BasePrice,
+                         Capacity = @Capacity, Description = @Description, IsAvailable = @IsAvailable, UpdatedAt = @UpdatedAt
+                         WHERE Id = @Id";
+            using var conn = _context.CreateConnection();
+            var rows = await conn.ExecuteAsync(sql, new
+            {
+                Id = id,
+                RoomNumber = room.RoomNumber,
+                Type = room.Type,
+                BasePrice = room.BasePrice,
+                Capacity = room.Capacity,
+                Description = room.Description,
+                IsAvailable = room.IsAvailable,
+                UpdatedAt = room.UpdatedAt
+            });
             return rows > 0;
         }
     }

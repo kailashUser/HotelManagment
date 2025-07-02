@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RoomService } from '../../../services/room.service';
 
-// Assuming a Room interface exists (can import from customer book-rooms if needed)
 interface Room {
   id: number;
   name: string;
@@ -23,31 +22,46 @@ interface Room {
   styleUrls: ['./room-list.component.scss']
 })
 export class RoomListComponent implements OnInit {
-  rooms: any[] = []; // Placeholder for room data
+  rooms: Room[] = [];
 
-  constructor(private roomServices: RoomService) { }
+  constructor(private roomService: RoomService, private router: Router) { }
 
   ngOnInit(): void {
-    // Load room data (placeholder)
     this.loadRooms();
   }
 
   loadRooms(): void {
-    this.roomServices.getAllRooms().subscribe((data) => {
-      this.rooms = data;
-      console.log("rooms loading" + data)
-    })
+    this.roomService.getAllRooms().subscribe({
+      next: (data) => {
+        this.rooms = data;
+        console.log('Rooms loaded:', data);
+      },
+      error: (err) => {
+        console.error('Failed to load rooms:', err);
+      }
+    });
   }
 
   editRoom(id: number): void {
-    // TODO: Navigate to edit room page
-    console.log('Editing room with ID:', id);
+   
+    this.router.navigate(['/manager/edit-room', id]);
   }
 
   deleteRoom(id: number): void {
-    // TODO: Implement delete room logic
-    console.log('Deleting room with ID:', id);
-    // Remove from mock data for immediate view update
-    this.rooms = this.rooms.filter(r => r.id !== id);
+    if (!confirm('Are you sure you want to delete this room?')) {
+      return;
+    }
+
+    this.roomService.deleteRoom(id).subscribe({
+      next: () => {
+
+        this.rooms = this.rooms.filter(r => r.id !== id);
+        alert('Room deleted successfully.');
+      },
+      error: (err) => {
+        console.error('Failed to delete room:', err);
+        alert('Failed to delete room. Please try again.');
+      }
+    });
   }
 }
