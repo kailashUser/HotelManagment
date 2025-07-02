@@ -11,6 +11,18 @@ export interface Room {
   available: boolean;
 }
 
+interface Rooms {
+  id: number;
+  name: string;
+  type: string;
+  price: number;
+  capacity: number;
+  amenities: string[];
+  imageUrl: string;
+  available: boolean;
+}
+
+
 // Raw backend room response model
 export interface RawRoom {
   id: number;
@@ -24,7 +36,7 @@ export interface RawRoom {
   updatedAt?: string | null;
 }
 
-// DTO for creating/updating room - matches backend expected payload shape exactly
+
 export interface CreateRoomDto {
   roomNumber: string;
   type: number;

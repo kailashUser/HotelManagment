@@ -19,6 +19,27 @@ namespace HotelReservation.Controllers
             _repo = repo;
         }
 
+        [HttpGet("with-customer")]
+        public async Task<IActionResult> GetAllWithCustomer()
+        {
+            var result = await _repo.GetAllWithCustomerAsync();
+            return Ok(ApiResponse<IEnumerable<ReservationWithCustomer>>.Ok(result));
+        }
+
+       
+        [HttpGet("with-customer/{id}")]
+        public async Task<IActionResult> GetByIdWithCustomer(int id)
+        {
+            var result = await _repo.GetByIdWithCustomerAsync(id);
+            if (result == null)
+                return NotFound(ApiResponse<string>.Fail("Reservation not found"));
+
+            return Ok(ApiResponse<ReservationWithCustomer>.Ok(result));
+        }
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

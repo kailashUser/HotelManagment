@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { RoomService } from '../../../services/room.service';
 
 interface Room {
@@ -24,7 +25,7 @@ interface Room {
 export class RoomListComponent implements OnInit {
   rooms: Room[] = [];
 
-  constructor(private roomService: RoomService, private router: Router) { }
+  constructor(private roomService: RoomService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.loadRooms();
@@ -43,24 +44,21 @@ export class RoomListComponent implements OnInit {
   }
 
   editRoom(id: number): void {
-   
+
     this.router.navigate(['/manager/edit-room', id]);
   }
 
   deleteRoom(id: number): void {
-    if (!confirm('Are you sure you want to delete this room?')) {
-      return;
-    }
 
     this.roomService.deleteRoom(id).subscribe({
       next: () => {
 
         this.rooms = this.rooms.filter(r => r.id !== id);
-        alert('Room deleted successfully.');
+        this.toastr.success(' Room deleted successful!.', 'Success');
       },
       error: (err) => {
         console.error('Failed to delete room:', err);
-        alert('Failed to delete room. Please try again.');
+        this.toastr.error('Failed to delete room. Please try again')
       }
     });
   }

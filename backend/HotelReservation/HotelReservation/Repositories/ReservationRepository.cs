@@ -73,6 +73,45 @@ namespace HotelReservation.Repositories
             var rows = await connection.ExecuteAsync(sql, new { Id = id });
             return rows > 0;
         }
+
+        public async Task<IEnumerable<ReservationWithCustomer>> GetAllWithCustomerAsync()
+        {
+            var sql = @"
+        SELECT 
+            r.Id, r.CustomerId, r.RoomId, r.CheckInDate, r.CheckOutDate, 
+            r.ActualCheckIn, r.ActualCheckOut, r.Status, 
+            r.TotalAmount, r.DepositAmount, r.SpecialRequests,
+            r.CreatedAt, r.UpdatedAt,
+            c.FirstName + ' ' + c.LastName AS CustomerName,
+            'Room ' + CAST(rm.RoomNumber AS VARCHAR) AS RoomName
+        FROM Reservations r
+        LEFT JOIN Customers c ON r.CustomerId = c.Id
+        LEFT JOIN Rooms rm ON r.RoomId = rm.Id";
+
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<ReservationWithCustomer>(sql);
+            return result;
+        }
+
+        public async Task<ReservationWithCustomer?> GetByIdWithCustomerAsync(int id)
+        {
+            var sql = @"
+        SELECT 
+            r.Id, r.CustomerId, r.RoomId, r.CheckInDate, r.CheckOutDate, 
+            r.ActualCheckIn, r.ActualCheckOut, r.Status, 
+            r.TotalAmount, r.DepositAmount, r.SpecialRequests,
+            r.CreatedAt, r.UpdatedAt,
+            c.FirstName + ' ' + c.LastName AS CustomerName,
+            'Room ' + CAST(rm.RoomNumber AS VARCHAR) AS RoomName
+        FROM Reservations r
+        LEFT JOIN Customers c ON r.CustomerId = c.Id
+        LEFT JOIN Rooms rm ON r.RoomId = rm.Id
+        WHERE r.Id = @Id";
+
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryFirstOrDefaultAsync<ReservationWithCustomer>(sql, new { Id = id });
+            return result;
+        }
     }
 
 }
