@@ -1,10 +1,35 @@
+// Display-friendly room object for UI
 export interface Room {
+  description: string;
   id: number;
-  name: string; // from RoomNumber
+  name: string;
   type: string;
-  price: number; // from basePrice
+  price: number;
   capacity: number;
   amenities: string[];
   imageUrl: string;
-  available: boolean; // from isAvailable
+  available: boolean;
+}
+
+// Raw backend room response model
+export interface RawRoom {
+  id: number;
+  roomNumber: string;
+  type: number;
+  basePrice: number;
+  capacity: number;
+  description?: string | null;
+  isAvailable: boolean;
+  createdAt: string;
+  updatedAt?: string | null;
+}
+
+// DTO for creating/updating room - matches backend expected payload shape exactly
+export interface CreateRoomDto {
+  roomNumber: string;
+  type: number;
+  basePrice: number;
+  capacity: number;
+  isAvailable: boolean;
+  description?: string | null;
 }

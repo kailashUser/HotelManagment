@@ -42,11 +42,17 @@ namespace HotelReservation.Controllers
             return Ok(ApiResponse<int>.Ok(id, "Room created"));
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(Room room)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] Room room)
         {
+            if (room == null)
+            {
+                return BadRequest(ApiResponse<string>.Fail("Room data is required"));
+            }
+
             room.UpdatedAt = DateTime.UtcNow;
-            var updated = await _repo.UpdateAsync(room);
+
+            var updated = await _repo.UpdateAsync(id, room);
             if (!updated) return NotFound(ApiResponse<string>.Fail("Room not found"));
             return Ok(ApiResponse<string>.Ok("Room updated"));
         }
