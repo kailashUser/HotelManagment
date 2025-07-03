@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-clerk',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './clerk.component.html',
   styleUrls: ['./clerk.component.scss']
 })
@@ -25,4 +26,4 @@ export class ClerkComponent {
     { id: 2, title: 'Process Payment', status: 'Completed', priority: 'Medium' },
     { id: 3, title: 'Room Assignment', status: 'In Progress', priority: 'High' }
   ];
-} 
+}

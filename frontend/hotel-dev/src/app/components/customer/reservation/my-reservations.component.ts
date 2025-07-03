@@ -24,7 +24,7 @@ export class MyReservationsComponent implements OnInit {
   constructor(private reservationService: ReservationService) { }
 
   ngOnInit(): void {
-    this.extractCustomerIdFromToken(); // ✅ Fix here
+    this.extractCustomerIdFromToken();
     this.loadReservations(this.customerId);
   }
 

@@ -40,9 +40,9 @@ interface Reservation {
         <div class="col-md-6">
           <div class="btn-group float-end">
             <button class="btn btn-outline-primary" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
-            <button class="btn btn-outline-success" [class.active]="currentFilter === 'active'" (click)="setFilter('active')">Active</button>
-            <button class="btn btn-outline-warning" [class.active]="currentFilter === 'upcoming'" (click)="setFilter('upcoming')">Upcoming</button>
-            <button class="btn btn-outline-danger" [class.active]="currentFilter === 'completed'" (click)="setFilter('completed')">Completed</button>
+            <button class="btn btn-outline-success" [class.active]="currentFilter === 'Confirmed'" (click)="setFilter('Confirmed')">Confirmed</button>
+            <button class="btn btn-outline-warning" [class.active]="currentFilter === 'Pending'" (click)="setFilter('Pending')">Pending</button>
+            <button class="btn btn-outline-danger" [class.active]="currentFilter === 'CheckedIn'" (click)="setFilter('CheckedIn')">CheckedIn</button>
           </div>
         </div>
       </div>
@@ -69,14 +69,14 @@ interface Reservation {
               <td>{{ reservation.checkOutDate | date }}</td>
               <td>
                 <span class="badge" [ngClass]="{
-                  'bg-secondary opaity-75': reservation.status === 'active',
-                  'bg-warning': reservation.status === 'upcoming',
-                  'bg-success': reservation.status === 'completed'
+                  'bg-secondary opaity-75': reservation.status === 'Confirmed',
+                  'bg-warning': reservation.status === 'Pending',
+                  'bg-success': reservation.status === 'CheckedIn'
                 }">{{ reservation.status }}</span>
               </td>
               <td>
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-primary" [routerLink]="['/clerk/check-out', reservation.id]" *ngIf="reservation.status === 'active'">
+                  <button class="btn btn-sm btn-primary" [routerLink]="['/clerk/check-out', reservation.id]" *ngIf="reservation.status === 'Confirmed' && isCheckoutDue(reservation.checkOutDate)">
                     Check Out
                   </button>
                   <button class="btn btn-sm btn-outline-dark" [routerLink]="['/clerk/reservations', reservation.id]">
@@ -164,12 +164,19 @@ export class CustomerReservationsComponent implements OnInit {
 
   private mapStatus(status: string | number): string {
     const statusMap: Record<number, string> = {
-      1: 'active',
-      2: 'upcoming',
-      3: 'completed',
-      4: 'completed',
-      0: 'upcoming' // You can adjust this as needed
+      1: 'Confirmed',
+      2: 'CheckedIn',
+      3: 'CheckedOut',
+      4: 'Cancelled',
+      5: 'NoShow',
+      0: 'Pending' // You can adjust this as needed
     };
     return typeof status === 'number' ? (statusMap[status] || 'unknown') : status;
   }
+
+  isCheckoutDue(checkOutDate: string): boolean {
+    return new Date(checkOutDate) <= new Date();
+  }
 }
+
+

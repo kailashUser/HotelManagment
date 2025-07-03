@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Room } from '../interfaces/room.interface';
 import { AuthService } from './auth.service';
+import { ApiResponse } from '../models/ApiResponse';
 
 interface Customer {
   id: number;
@@ -34,7 +35,7 @@ interface Reservation {
   checkOutDate: string; // Assuming ISO 8601 date string
   actualCheckIn?: string; // Optional, assuming ISO 8601
   actualCheckOut?: string; // Optional, assuming ISO 8601
-  status: number; // Or string like 'Active', 'Completed', 'Cancelled' - check API response
+  status: number;
   totalAmount: number;
   depositAmount?: number;
   specialRequests?: string;
@@ -296,6 +297,18 @@ export class ClerkService {
       })
       .pipe(catchError(this.handleError));
   }
+
+  updatestatus(
+    reservationData: Partial<Reservation> & { id: number }
+  ): Observable<ApiResponse<string>> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .put<ApiResponse<string>>(`${this.apiUrl}/Reservation/updateStatus`, reservationData, {
+        headers,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
 
   deleteReservation(id: number): Observable<any> {
     const headers = this.getAuthHeaders();

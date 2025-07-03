@@ -119,6 +119,31 @@ namespace HotelReservation.Repositories
             using var conn = _context.CreateConnection();
             return await conn.QueryAsync<Reservation>(sql, new { CustomerId = customerId });
         }
+
+        public async Task<bool> updateStatus(Reservation reservation)
+        {
+            var sql = @"
+                UPDATE Reservations 
+                SET 
+                    Status = 2,           
+                    UpdatedAt = @UpdatedAt
+                WHERE 
+                    RoomId = @RoomId AND 
+                    CustomerId = @CustomerId";
+
+            using var connection = _context.CreateConnection();
+
+            var rows = await connection.ExecuteAsync(sql, new
+            {
+             
+                UpdatedAt = DateTime.UtcNow,
+                reservation.RoomId,
+                reservation.CustomerId
+            });
+
+            return rows > 0;
+        }
+
     }
 
 }

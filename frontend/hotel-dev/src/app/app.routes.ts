@@ -31,9 +31,9 @@ import { RoomListComponent as ManagerRoomListComponent } from './components/mana
 import { RevenueDashboardComponent } from './components/manager/revenues/revenue-dashboard.component';
 
 // Import Clerk Components
-import { BillSummaryComponent } from './components/clerk/billing/bill-summary.component';
-import { CheckOutComponent } from './components/clerk/billing/check-out.component';
+import { CheckInComponent } from './components/clerk/check-in.component';
 import { ProfileComponent as ClerkProfileComponent } from './components/clerk/profile/profile.component';
+import { AddReservationComponent } from './components/clerk/reservations/add-reservation.component';
 import { CustomerReservationsComponent } from './components/clerk/reservations/customer-reservations.component';
 import { ReservationFormComponent } from './components/clerk/reservations/reservation-form.component';
 import { RoomStatusComponent } from './components/clerk/room-status/room-status.component';
@@ -70,8 +70,8 @@ export const routes: Routes = [
       { path: 'profile', component: ClerkProfileComponent },
       { path: 'manage-room-states', component: RoomStatusComponent },
       { path: 'customer-reservations', component: CustomerReservationsComponent },
-      { path: 'check-out', component: CheckOutComponent },
-      { path: 'billing/summary', component: BillSummaryComponent },
+      { path: 'reservations/add', component: AddReservationComponent },
+      { path: 'check-in', component: CheckInComponent },
       { path: 'reservations/new', component: ReservationFormComponent },
       { path: '', redirectTo: 'manage-room-states', pathMatch: 'full' }
     ]
@@ -89,5 +89,5 @@ export const routes: Routes = [
       { path: '', redirectTo: 'book-rooms', pathMatch: 'full' }
     ]
   },
-  { path: '**', redirectTo: '' }
+
 ];

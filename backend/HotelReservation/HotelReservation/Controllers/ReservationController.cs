@@ -115,5 +115,19 @@ namespace HotelReservation.Controllers
             return Ok(ApiResponse<IEnumerable<Reservation>>.Ok(result));
         }
 
+        [HttpPut("updateStatus")]
+        public async Task<IActionResult> updateStatus([FromBody] Reservation reservation)
+        {
+            if (reservation.CheckOutDate <= reservation.CheckInDate)
+                return BadRequest(ApiResponse<string>.Fail("Check-out date must be after check-in date"));
+
+            reservation.UpdatedAt = DateTime.UtcNow;
+            var success = await _repo.updateStatus(reservation);
+            if (!success)
+                return NotFound(ApiResponse<string>.Fail("Reservation not found"));
+
+            return Ok(ApiResponse<string>.Ok("Reservation updated successfully"));
+        }
+
     }
 }

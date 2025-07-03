@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ClerkService } from '../../../services/clerk.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { ClerkService } from '../../../services/clerk.service';
 
 interface Reservation {
   id: number;
@@ -75,14 +75,15 @@ interface Payment {
     <div class="container py-5">
       <h4>Check-out</h4>
       <div class="row">
+        <!-- Left: Reservation Search/Details -->
         <div class="col-md-6">
           <div class="card mb-4">
             <div class="card-body">
               <h5 class="card-title">Find Reservation</h5>
-              <form #searchForm="ngForm" (ngSubmit)="searchReservation()">
+              <form #searchForm="ngForm" (ngSubmit)="searchReservation()" *ngIf="!reservation">
                 <div class="mb-3">
                   <label for="roomNumber" class="form-label">Room Number</label>
-                  <input type="text" class="form-control" id="roomNumber" 
+                  <input type="text" class="form-control" id="roomNumber"
                          [(ngModel)]="searchRoomNumber" name="roomNumber" required>
                   <div class="invalid-feedback" *ngIf="searchForm.submitted && !searchRoomNumber">
                     Room number is required
@@ -94,46 +95,48 @@ interface Payment {
                   </button>
                 </div>
               </form>
+              <div *ngIf="reservation">
+                <h5 class="card-title mt-3">Reservation Details</h5>
+                <div class="mb-3">
+                  <strong>Guest:</strong> {{ reservation.customer?.firstName }} {{ reservation.customer?.lastName }}
+                </div>
+                <div class="mb-3">
+                  <strong>Room:</strong> {{ reservation.room?.number }}
+                </div>
+                <div class="mb-3">
+                  <strong>Check-in:</strong> {{ reservation.checkInDate | date:'short' }}
+                </div>
+                <div class="mb-3">
+                  <strong>Check-out:</strong> {{ reservation.checkOutDate | date:'short' }}
+                </div>
+                <div class="mb-3">
+                  <strong>Additional Services:</strong>
+                  <ul class="list-unstyled">
+                    <li *ngIf="reservation.addOns?.breakfast">Breakfast</li>
+                    <li *ngIf="reservation.addOns?.wifi">Wi-Fi</li>
+                    <li *ngIf="reservation.addOns?.parking">Parking</li>
+                  </ul>
+                </div>
+                <div class="mb-3">
+                  <strong>Stay Charges:</strong> {{ reservation.stayCharges | currency }}
+                </div>
+                <div class="mb-3">
+                  <strong>Taxes:</strong> {{ reservation.taxes | currency }}
+                </div>
+                <div class="mb-3">
+                  <strong>Total Amount:</strong> {{ reservation.totalAmount | currency }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <!-- Right: Billing/Payment -->
         <div class="col-md-6" *ngIf="reservation">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Reservation Details</h5>
-              <div class="mb-3">
-                <strong>Guest:</strong> {{ reservation.customer?.firstName }} {{ reservation.customer?.lastName }}
-              </div>
-              <div class="mb-3">
-                <strong>Room:</strong> {{ reservation.room?.number }}
-              </div>
-              <div class="mb-3">
-                <strong>Check-in:</strong> {{ reservation.checkInDate | date }}
-              </div>
-              <div class="mb-3">
-                <strong>Check-out:</strong> {{ reservation.checkOutDate | date }}
-              </div>
-              <div class="mb-3">
-                <strong>Additional Services:</strong>
-                <ul class="list-unstyled">
-                  <li *ngIf="reservation.addOns?.breakfast">Breakfast</li>
-                  <li *ngIf="reservation.addOns?.wifi">Wi-Fi</li>
-                  <li *ngIf="reservation.addOns?.parking">Parking</li>
-                </ul>
-              </div>
-              <div class="mb-3">
-                <strong>Stay Charges:</strong> {{ reservation.stayCharges | currency }}
-              </div>
-              <div class="mb-3">
-                <strong>Taxes:</strong> {{ reservation.taxes | currency }}
-              </div>
-              <div class="mb-3">
-                <strong>Total Amount:</strong> {{ reservation.totalAmount | currency }}
-              </div>
-
-              <!-- Billing Information -->
-              <div *ngIf="billing" class="mt-4">
-                <h6 class="card-subtitle mb-3">Billing Information</h6>
+              <h5 class="card-title">Billing & Payment</h5>
+              <div *ngIf="billing" class="mb-3">
+                <h6 class="card-subtitle mb-2">Billing Information</h6>
                 <div class="mb-2">
                   <strong>Room Charges:</strong> {{ billing.roomCharges | currency }}
                 </div>
@@ -150,12 +153,10 @@ interface Payment {
                   <strong>Total Amount:</strong> {{ billing.finalAmount | currency }}
                 </div>
               </div>
-
-              <!-- Payment Information -->
-              <div *ngIf="payment" class="mt-4">
-                <h6 class="card-subtitle mb-3">Payment Information</h6>
+              <div *ngIf="payment" class="mb-3">
+                <h6 class="card-subtitle mb-2">Payment Information</h6>
                 <div class="mb-2">
-                  <strong>Status:</strong> 
+                  <strong>Status:</strong>
                   <span [ngClass]="{
                     'text-success': payment.status === 1,
                     'text-warning': payment.status === 2,
@@ -177,14 +178,16 @@ interface Payment {
                   <strong>Transaction ID:</strong> {{ payment.transactionId }}
                 </div>
               </div>
-
               <div class="d-grid gap-2 mt-4">
-                <button class="btn btn-success" (click)="proceedToPayment()" 
+                <button class="btn btn-success" (click)="proceedToPayment()"
                         [disabled]="payment?.status === 1">
                   {{ payment?.status === 1 ? 'Payment Completed' : 'Proceed to Payment' }}
                 </button>
                 <button class="btn btn-secondary" (click)="clearSearch()">
                   Clear
+                </button>
+                <button class="btn btn-outline-primary" (click)="printReceipt()" [disabled]="!billing">
+                  <i class="bi bi-printer"></i> Print Receipt
                 </button>
               </div>
             </div>
@@ -211,12 +214,38 @@ export class CheckOutComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private clerkService: ClerkService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    // Load initial data if needed
+    // If route param id is present, auto-load reservation
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.loadReservationById(+id);
+      }
+    });
+  }
+
+  loadReservationById(id: number): void {
+    // Implement this to fetch reservation by ID and set reservation, billing, payment
+    // For now, just call searchReservation logic with a mock room number or fetch by ID
+    // You should implement the actual fetch logic here
+    // Example:
+    this.clerkService.getReservationById(id).subscribe({
+      next: (res: any) => {
+        this.reservation = res;
+        this.loadBillingAndPayment(res.id);
+      },
+      error: () => this.toastr.error('Failed to load reservation')
+    });
+  }
+
+  printReceipt(): void {
+    // Implement PDF/print logic here (e.g., using window.print() or a PDF library)
+    window.print();
   }
 
   searchReservation(): void {
@@ -285,4 +314,4 @@ export class CheckOutComponent implements OnInit {
     this.billing = null;
     this.payment = null;
   }
-} 
+}

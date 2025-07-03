@@ -57,7 +57,7 @@ export class CustomerService {
 
   // 🔍 Customer Profile
   getCustomerProfile(): Observable<Customer> {
-    return this.http.get<Customer>(`${this.apiUrl}/Customer/profile`, {
+    return this.http.get<Customer>(`${this.apiUrl}/Customer`, {
       headers: this.getAuthHeaders()
     }).pipe(catchError(this.handleError));
   }
