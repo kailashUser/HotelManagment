@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { delay, tap, catchError, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
+import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { Room } from '../interfaces/room.interface';
+import { AuthService } from './auth.service';
 
 interface Customer {
   id: number;
@@ -123,7 +123,7 @@ export class ClerkService {
     private http: HttpClient,
     private authService: AuthService,
     private toastr: ToastrService
-  ) {}
+  ) { }
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken();
@@ -224,9 +224,16 @@ export class ClerkService {
   getReservations(): Observable<Reservation[]> {
     const headers = this.getAuthHeaders();
     return this.http
-      .get<Reservation[]>(`${this.apiUrl}/Reservation`, { headers })
-      .pipe(catchError(this.handleError));
+      .get<{ success: boolean; message: string; data: Reservation[] }>(
+        `${this.apiUrl}/Reservation/with-customer`,
+        { headers }
+      )
+      .pipe(
+        map(response => response.data),
+        catchError(this.handleError)
+      );
   }
+
 
   getReservationById(id: number): Observable<Reservation> {
     const headers = this.getAuthHeaders();

@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { CreateRoomDto } from '../../../models/room.model';
 import { RoomService } from '../../../services/room.service';
 
@@ -33,7 +34,8 @@ export class EditRoomComponent implements OnInit {
     private fb: FormBuilder,
     private roomService: RoomService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -106,7 +108,7 @@ export class EditRoomComponent implements OnInit {
       next: (res) => {
         console.log('SUCCESS! Response:', res);
         this.isSubmitting = false;
-        alert('Room updated successfully!');
+        this.toastr.success('Room updated successfully!', 'success')
         this.router.navigate(['/manager/manage-rooms']);
       },
       error: (err) => {

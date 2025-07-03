@@ -24,7 +24,9 @@
           <th scope="row">{{ room.id }}</th>
           <td>{{ room.name }}</td>
           <td>{{ room.type }}</td>
-          <td>{{ room.available ? "Available" : "Unavailable" }}</td>
+          <td [ngClass]="room.available ? 'text-success' : 'text-danger'">
+            {{ room.available ? "Available" : "Occupied" }}
+          </td>
           <td>{{ room.price | currency }}</td>
           <td>
             <button

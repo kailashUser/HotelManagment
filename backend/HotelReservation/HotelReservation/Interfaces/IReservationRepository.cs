@@ -9,5 +9,7 @@ namespace HotelReservation.Interfaces
         Task<int> CreateAsync(Reservation reservation);
         Task<bool> UpdateAsync(Reservation reservation);
         Task<bool> DeleteAsync(int id);
+        Task<IEnumerable<ReservationWithCustomer>> GetAllWithCustomerAsync();
+        Task<ReservationWithCustomer?> GetByIdWithCustomerAsync(int id);
     }
 }

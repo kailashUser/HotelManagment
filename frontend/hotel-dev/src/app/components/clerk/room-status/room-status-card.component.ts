@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Room } from '../../../interfaces/room.interface';
 
@@ -12,7 +12,7 @@ import { Room } from '../../../interfaces/room.interface';
       <div class="card-body">
         <h5 class="card-title">Room {{ room.number }}</h5>
         <p class="card-text">Type: {{ room.type }}</p>
-        <p class="card-text">Status: 
+        <p class="card-text">Status:
           <span class="badge" [ngClass]="{
             'bg-success': room.status === 'Available',
             'bg-danger': room.status === 'Occupied',
@@ -24,7 +24,6 @@ import { Room } from '../../../interfaces/room.interface';
           <select class="form-select" id="status-{{room.id}}" [(ngModel)]="room.status" (change)="onStatusChange()">
             <option value="Available">Available</option>
             <option value="Occupied">Occupied</option>
-            <option value="Maintenance">Maintenance</option>
           </select>
         </div>
       </div>
@@ -48,4 +47,4 @@ export class RoomStatusCardComponent {
     this.statusChange.emit(this.room.status);
   }
 
-} 
+}
