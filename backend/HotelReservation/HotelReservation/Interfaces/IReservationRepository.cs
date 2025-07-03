@@ -11,5 +11,6 @@ namespace HotelReservation.Interfaces
         Task<bool> DeleteAsync(int id);
         Task<IEnumerable<ReservationWithCustomer>> GetAllWithCustomerAsync();
         Task<ReservationWithCustomer?> GetByIdWithCustomerAsync(int id);
+        Task<IEnumerable<Reservation>> GetByCustomerIdAsync(int customerId);
     }
 }

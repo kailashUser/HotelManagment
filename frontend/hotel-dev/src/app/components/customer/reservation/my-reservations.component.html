@@ -10,20 +10,32 @@
       </a>
     </li> -->
     <li class="nav-item">
-      <a class="nav-link" [class.active]="activeTab === 'pending'" (click)="activeTab = 'pending'"
-        href="javascript:void(0)">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'pending'"
+        (click)="activeTab = 'pending'"
+        href="javascript:void(0)"
+      >
         Pending
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [class.active]="activeTab === 'completed'" (click)="activeTab = 'completed'"
-        href="javascript:void(0)">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'completed'"
+        (click)="activeTab = 'completed'"
+        href="javascript:void(0)"
+      >
         Completed
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [class.active]="activeTab === 'Cancelled'" (click)="activeTab = 'Cancelled'"
-        href="javascript:void(0)">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'Cancelled'"
+        (click)="activeTab = 'Cancelled'"
+        href="javascript:void(0)"
+      >
         Cancelled
       </a>
     </li>
@@ -36,20 +48,23 @@
         <div class="card h-100">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-start mb-3">
-              <h5 class="card-title mb-0">{{ 'Room ' + reservation.id }}</h5>
-              <span class="badge" [ngClass]="getStatusClass(reservation.status)">
+              <h5 class="card-title mb-0">{{ "Room " + reservation.id }}</h5>
+              <!-- <span
+                class="badge"
+                [ngClass]="getStatusClass(reservation.status)"
+              >
                 {{ reservation.status | titlecase }}
-              </span>
+              </span> -->
             </div>
 
             <div class="mb-3">
               <p class="mb-1">
                 <i class="bi bi-calendar-check me-2"></i>
-                Check-in: {{ reservation.checkIn | date:'mediumDate' }}
+                Check-in: {{ reservation.checkIn | date : "mediumDate" }}
               </p>
               <p class="mb-1">
                 <i class="bi bi-calendar-x me-2"></i>
-                Check-out: {{ reservation.checkOut | date:'mediumDate' }}
+                Check-out: {{ reservation.checkOut | date : "mediumDate" }}
               </p>
               <p class="mb-1">
                 <i class="bi bi-people me-2"></i>
@@ -61,21 +76,26 @@
               </p>
             </div>
 
-
-
-
-            <button class="btn btn-sm btn-primary flex-fill" [routerLink]="['/customer/booking', reservation.id]">
+            <button
+              *ngIf="
+                activeTab === 'pending' && reservation.status === 'pending'
+              "
+              class="btn btn-sm btn-primary flex-fill"
+              [routerLink]="['/customer/booking', reservation.id]"
+            >
               Book Now
             </button>
-            <button class="btn btn-sm btn-danger me-2" *ngIf="reservation.status === 'pending'"
-              (click)="cancelReservation(reservation.id)">
+            <button
+              class="btn btn-sm btn-danger me-2"
+              *ngIf="reservation.status === 'pending'"
+              (click)="cancelReservation(reservation.id)"
+            >
               Cancel
             </button>
             <!-- <button class="btn btn-sm btn-secondary me-2" *ngIf="reservation.status === 'pending'"
               [routerLink]="['/customer/edit-reservation', reservation.id]">
               Edit
             </button> -->
-
           </div>
         </div>
       </div>

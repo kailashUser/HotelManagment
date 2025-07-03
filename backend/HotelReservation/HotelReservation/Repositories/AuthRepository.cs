@@ -2,6 +2,7 @@
 using HotelReservation.Data;
 using HotelReservation.Interfaces;
 using HotelReservation.Models.Entities;
+using Microsoft.Data.SqlClient;
 
 namespace HotelReservation.Repositories
 {
@@ -42,20 +43,69 @@ namespace HotelReservation.Repositories
             return await connection.QueryFirstOrDefaultAsync<User>(sql, new { Id = id });
         }
 
+        //public async Task<int> RegisterAsync(User user)
+        //{
+        //    var sql = @"INSERT INTO Users (Username, Email, PasswordHash, RoleID, CustomerId, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
+        //                VALUES (@Username, @Email, @PasswordHash, @RoleId, @CustomerId, @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
+        //                SELECT CAST(SCOPE_IDENTITY() as int);";
+        //    using var conn = _context.CreateConnection();
+        //    return await conn.ExecuteScalarAsync<int>(sql, user);
+
+        //    //var sql = @"INSERT INTO Users (Username, Email, PasswordHash, RoleID, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
+        //    //            VALUES (@Username, @Email, @PasswordHash, @RoleId , @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
+        //    //            SELECT CAST(SCOPE_IDENTITY() as int);";
+        //    //using var conn = _context.CreateConnection();
+        //    //return await conn.ExecuteScalarAsync<int>(sql, user);
+        //}
+
         public async Task<int> RegisterAsync(User user)
         {
-            var sql = @"INSERT INTO Users (Username, Email, PasswordHash, RoleID, CustomerId, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
-                        VALUES (@Username, @Email, @PasswordHash, @RoleId, @CustomerId, @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
-                        SELECT CAST(SCOPE_IDENTITY() as int);";
-            using var conn = _context.CreateConnection();
-            return await conn.ExecuteScalarAsync<int>(sql, user);
+            var insertUserSql = @"INSERT INTO Users 
+        (Username, Email, PasswordHash, RoleID, CustomerId, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
+        VALUES 
+        (@Username, @Email, @PasswordHash, @RoleId, @CustomerId, @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
+        SELECT CAST(SCOPE_IDENTITY() as int);";
 
-            //var sql = @"INSERT INTO Users (Username, Email, PasswordHash, RoleID, FirstName, LastName, PhoneNumber, IsActive, CreatedAt)
-            //            VALUES (@Username, @Email, @PasswordHash, @RoleId , @FirstName, @LastName, @PhoneNumber, @IsActive, @CreatedAt);
-            //            SELECT CAST(SCOPE_IDENTITY() as int);";
-            //using var conn = _context.CreateConnection();
-            //return await conn.ExecuteScalarAsync<int>(sql, user);
+            var insertCustomerSql = @"INSERT INTO Customers 
+        (FirstName, LastName, Email, PhoneNumber, Address, CreatedAt, UpdatedAt,userID)
+        VALUES 
+        (@FirstName, @LastName, @Email, @PhoneNumber, @Address, @CreatedAt, @UpdatedAt,@userId);";
+
+            using var conn = _context.CreateConnection();
+            await ((SqlConnection)conn).OpenAsync(); // 🔧 Fix: cast to SqlConnection
+
+            using var transaction = conn.BeginTransaction();
+
+            try
+            {
+                var userId = await conn.ExecuteScalarAsync<int>(insertUserSql, user, transaction);
+
+                var customer = new
+                {
+                    user.FirstName,
+                    user.LastName,
+                    user.Email,
+                    user.PhoneNumber,
+                    Address = "",
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    userId = userId
+                };
+
+                await conn.ExecuteAsync(insertCustomerSql, customer, transaction);
+
+                transaction.Commit();
+                return userId;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
+
+
+
 
         public async Task<bool> UpdateUserAsync(User user)
         {

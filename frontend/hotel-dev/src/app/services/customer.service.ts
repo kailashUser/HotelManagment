@@ -1,5 +1,5 @@
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -34,7 +34,7 @@ export class CustomerService {
   constructor(
     private readonly http: HttpClient,
     private readonly authService: AuthService
-  ) {}
+  ) { }
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken();
@@ -80,6 +80,22 @@ export class CustomerService {
       headers: this.getAuthHeaders()
     }).pipe(catchError(this.handleError));
   }
+  getReservationsByCustomer(customerId: number): Observable<ApiResponse<Reservation[]>> {
+    return this.http.get<ApiResponse<Reservation[]>>(
+      `${this.apiUrl}/Reservation/by-customer/${customerId}`,
+      { headers: this.getAuthHeaders() }
+    ).pipe(catchError(this.handleError));
+  }
+
+  // PUT update reservation
+  updateReservation(reservation: Reservation): Observable<ApiResponse<any>> {
+    return this.http.put<ApiResponse<any>>(
+      `${this.apiUrl}/Reservation`,
+      reservation,
+      { headers: this.getAuthHeaders() }
+    ).pipe(catchError(this.handleError));
+  }
+
 
   createReservation(reservationData: {
     roomId: number;

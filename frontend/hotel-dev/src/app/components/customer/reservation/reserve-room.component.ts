@@ -111,15 +111,9 @@ export class ReserveRoomComponent implements OnInit {
           backdrop: 'static',
         });
 
-        modalRef.componentInstance.title = '✔️ Consultation Confirmed!';
+        modalRef.componentInstance.title = '';
         modalRef.componentInstance.message = `
-      <p>Your reservation is scheduled for <em>7:00 PM</em>. We look forward to assisting you.</p>
-      <p><strong>⚠️ Late Arrival Policy:</strong><br>
-      To ensure the best service for all clients, please arrive on time.<br>
-      If you are <em>more than 15 minutes late</em>, your appointment may be:<br>
-      - <em>Shortened</em> to avoid delays for others, or<br>
-      - <em>Rescheduled</em> with a <em>late fee of 20%</em> of the service cost.</p>
-      <p>Thank you for understanding.</p>
+
     `;
 
         modalRef.result.then(() => {

@@ -107,5 +107,13 @@ namespace HotelReservation.Controllers
                 ? Ok(ApiResponse<string>.Ok("Reservation cancelled successfully"))
                 : BadRequest(ApiResponse<string>.Fail("Cancellation failed"));
         }
+
+        [HttpGet("by-customer/{customerId}")]
+        public async Task<IActionResult> GetByCustomerId(int customerId)
+        {
+            var result = await _repo.GetByCustomerIdAsync(customerId);
+            return Ok(ApiResponse<IEnumerable<Reservation>>.Ok(result));
+        }
+
     }
 }

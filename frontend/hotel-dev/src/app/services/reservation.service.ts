@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Reservation } from '../models/Reservation';
@@ -22,7 +22,7 @@ export interface CreateReservationDto {
 export class ReservationService {
   private apiUrl = `${environment.apiUrl}/Reservation`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   createReservation(data: CreateReservationDto): Observable<any> {
     const token = localStorage.getItem('token') || '';
@@ -57,6 +57,35 @@ export class ReservationService {
         )
       );
   }
+
+
+  getAllReservationsWithCustID(customerId: number): Observable<Reservation[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      Accept: '*/*',
+    });
+
+    const url = `${this.apiUrl}/by-customer/${customerId}`;
+
+    return this.http
+      .get<{ success: boolean; data: any[] }>(url, { headers })
+      .pipe(
+        map((res) =>
+          res.data.map((r) => ({
+            id: r.id,
+            CustomerId: r.customerId, // ✅ Fix casing here
+            roomName: r.room?.roomNumber ? `Room ${r.room.roomNumber}` : `Room ${r.roomId}`,
+            checkIn: r.checkInDate,
+            checkOut: r.checkOutDate,
+            status: this.mapStatus(r.status), // should return 'ongoing' | 'pending' | 'completed'
+            totalPrice: r.totalAmount,
+            guests: r.numberOfGuests ?? 1,
+          }))
+        )
+      );
+  }
+
 
   private mapStatus(code: number): 'pending' | 'completed' | 'ongoing' {
     switch (code) {

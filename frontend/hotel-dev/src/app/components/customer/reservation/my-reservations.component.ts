@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ReservationService } from '../../../services/reservation.service';
+import { jwtDecode } from 'jwt-decode';
 import { Reservation } from '../../../models/Reservation';
+import { ReservationService } from '../../../services/reservation.service';
 
 type ReservationStatus = 'ongoing' | 'pending' | 'completed' | 'Cancelled';
 
@@ -18,11 +19,13 @@ export class MyReservationsComponent implements OnInit {
   activeTab: ReservationStatus = 'pending';
   isLoading = false;
   route: any;
+  customerId: number = 0;
 
-  constructor(private reservationService: ReservationService) {}
+  constructor(private reservationService: ReservationService) { }
 
   ngOnInit(): void {
-    this.loadReservations();
+    this.extractCustomerIdFromToken(); // ✅ Fix here
+    this.loadReservations(this.customerId);
   }
 
   get filteredReservations(): Reservation[] {
@@ -48,6 +51,19 @@ export class MyReservationsComponent implements OnInit {
     }
   }
 
+
+  private extractCustomerIdFromToken(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      this.customerId = Number(
+        decoded[
+        'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'
+        ]
+      );
+    }
+  }
+
   formatPrice(price: number): string {
     if (typeof price !== 'number') {
       return '0.00';
@@ -55,9 +71,9 @@ export class MyReservationsComponent implements OnInit {
     return price.toFixed(2);
   }
 
-  private loadReservations(): void {
+  private loadReservations(customerId: number): void {
     this.isLoading = true;
-    this.reservationService.getAllReservations().subscribe({
+    this.reservationService.getAllReservationsWithCustID(customerId).subscribe({
       next: (data) => {
         console.log('getAllReservations', data);
         this.reservations = data;
@@ -75,7 +91,7 @@ export class MyReservationsComponent implements OnInit {
 
     this.reservationService.cancelReservation(id).subscribe({
       next: () => {
-        this.loadReservations(); // refresh
+        this.loadReservations(this.customerId); // refresh
       },
       error: (err) => {
         console.error('Cancellation failed:', err);
