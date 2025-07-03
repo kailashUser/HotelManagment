@@ -1,0 +1,82 @@
+<div *ngIf="loading" class="text-center my-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+<div *ngIf="!loading && bill">
+  <h2>Bill Summary</h2>
+  <p class="fs-5">
+    Total:
+    <span class="fw-bold text-success">{{ bill.finalAmount | currency }}</span>
+  </p>
+  <div class="mb-3">
+    <label class="form-label fw-bold">Payment Method</label>
+    <div class="btn-group w-100" role="group">
+      <input
+        type="radio"
+        class="btn-check"
+        name="paymentMethod"
+        id="pay-cash"
+        [value]="0"
+        [(ngModel)]="paymentMethod"
+        autocomplete="off"
+      />
+      <label class="btn btn-outline-success" for="pay-cash">
+        <i class="bi bi-cash-coin"></i> Pay with Cash
+      </label>
+
+      <input
+        type="radio"
+        class="btn-check"
+        name="paymentMethod"
+        id="pay-card"
+        [value]="1"
+        [(ngModel)]="paymentMethod"
+        autocomplete="off"
+      />
+      <label class="btn btn-outline-primary" for="pay-card">
+        <i class="bi bi-credit-card"></i> Pay with Card
+      </label>
+    </div>
+  </div>
+  <div *ngIf="paymentMethod === 1" class="mt-3">
+    <label class="form-label"
+      >Card Number:
+      <input type="text" class="form-control" [(ngModel)]="cardNumber" />
+    </label>
+    <label class="form-label"
+      >Card Holder Name:
+      <input type="text" class="form-control" [(ngModel)]="cardHolderName" />
+    </label>
+    <label class="form-label"
+      >Card Expiry Date:
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="cardExpiryDate"
+        placeholder="MM/YY"
+      />
+    </label>
+  </div>
+  <div class="d-flex gap-2 mt-4">
+    <button
+      class="btn btn-primary flex-grow-1"
+      (click)="processPayment()"
+      [disabled]="processing"
+    >
+      <span
+        *ngIf="processing"
+        class="spinner-border spinner-border-sm me-2"
+      ></span>
+      Pay & Check Out
+    </button>
+    <button
+      class="btn btn-outline-secondary"
+      (click)="dialogRef.close()"
+      [disabled]="processing"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

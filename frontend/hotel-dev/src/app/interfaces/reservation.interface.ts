@@ -14,7 +14,7 @@ export interface Reservation {
   totalAmount: number;
   depositAmount?: number;
   specialRequests?: string;
-  createdAt: string;
+  createdAt?: string | null;
   updatedAt?: string | null;
   paymentCompleted?: boolean;
   paymentDeadline?: string;

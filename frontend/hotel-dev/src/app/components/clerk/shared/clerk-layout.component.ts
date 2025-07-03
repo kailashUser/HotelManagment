@@ -11,18 +11,23 @@ import { RouterModule, RouterOutlet } from '@angular/router';
       <nav class="sidebar bg-light border-end p-3" style="width: 220px;">
         <h5 class="mb-4">Clerk Panel</h5>
         <ul class="nav flex-column">
-          <li class="nav-item mb-2">
-            <a class="nav-link" routerLink="/clerk/reservations/add" routerLinkActive="active">Add Reservation</a>
-          </li>
-          <li class="nav-item mb-2">
+        <li class="nav-item mb-2">
             <a class="nav-link" routerLink="/clerk/check-in" routerLinkActive="active">Check-in</a>
           </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link" routerLink="/clerk/check-out" routerLinkActive="active">Check-Out</a>
+          </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link" routerLink="/clerk/reservations/add" routerLinkActive="active">Add Reservation</a>
+          </li>
+
           <li class="nav-item mb-2">
             <a class="nav-link" routerLink="/clerk/customer-reservations" routerLinkActive="active">Customer Reservations</a>
           </li>
           <li class="nav-item mb-2">
             <a class="nav-link" routerLink="/clerk/manage-room-states" routerLinkActive="active">Manage Room States</a>
           </li>
+
         </ul>
       </nav>
       <!-- Main Content -->

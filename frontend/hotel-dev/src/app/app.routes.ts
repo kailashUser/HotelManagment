@@ -31,7 +31,10 @@ import { RoomListComponent as ManagerRoomListComponent } from './components/mana
 import { RevenueDashboardComponent } from './components/manager/revenues/revenue-dashboard.component';
 
 // Import Clerk Components
+
 import { CheckInComponent } from './components/clerk/check-in.component';
+
+import { CheckOutComponent } from './components/clerk/billing/check-out.component';
 import { ProfileComponent as ClerkProfileComponent } from './components/clerk/profile/profile.component';
 import { AddReservationComponent } from './components/clerk/reservations/add-reservation.component';
 import { CustomerReservationsComponent } from './components/clerk/reservations/customer-reservations.component';
@@ -46,8 +49,8 @@ export const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'service', component: ServicesComponent },
   { path: 'contact', component: ContactComponent },
-
   { path: 'rooms', component: RoomBrowseComponent },
+
   {
     path: 'manager',
     component: ManagerLayoutComponent,
@@ -73,6 +76,7 @@ export const routes: Routes = [
       { path: 'reservations/add', component: AddReservationComponent },
       { path: 'check-in', component: CheckInComponent },
       { path: 'reservations/new', component: ReservationFormComponent },
+      { path: 'check-out', component: CheckOutComponent },
       { path: '', redirectTo: 'manage-room-states', pathMatch: 'full' }
     ]
   },

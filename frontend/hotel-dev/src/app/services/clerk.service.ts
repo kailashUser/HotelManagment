@@ -5,8 +5,8 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Room } from '../interfaces/room.interface';
-import { AuthService } from './auth.service';
 import { ApiResponse } from '../models/ApiResponse';
+import { AuthService } from './auth.service';
 
 interface Customer {
   id: number;
@@ -31,18 +31,18 @@ interface Reservation {
   id: number;
   customerId: number;
   roomId: number;
-  checkInDate: string; // Assuming ISO 8601 date string
-  checkOutDate: string; // Assuming ISO 8601 date string
-  actualCheckIn?: string; // Optional, assuming ISO 8601
-  actualCheckOut?: string; // Optional, assuming ISO 8601
+  checkInDate: string;
+  checkOutDate: string;
+  actualCheckIn?: string | null;
+  actualCheckOut?: string | null;
   status: number;
   totalAmount: number;
   depositAmount?: number;
   specialRequests?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  customer?: Customer; // Assuming API might embed customer details
-  room?: Room; // Assuming API might embed room details
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  customer?: Customer;
+  room?: Room;
 }
 
 interface Billing {
@@ -287,16 +287,6 @@ export class ClerkService {
       .pipe(catchError(this.handleError));
   }
 
-  updateReservation(
-    reservationData: Partial<Reservation> & { id: number }
-  ): Observable<Reservation> {
-    const headers = this.getAuthHeaders();
-    return this.http
-      .put<Reservation>(`${this.apiUrl}/Reservation`, reservationData, {
-        headers,
-      })
-      .pipe(catchError(this.handleError));
-  }
 
   updatestatus(
     reservationData: Partial<Reservation> & { id: number }
@@ -308,6 +298,20 @@ export class ClerkService {
       })
       .pipe(catchError(this.handleError));
   }
+
+
+  updateCheckout(
+    reservationData: Partial<Reservation> & { id: number }
+  ): Observable<ApiResponse<string>> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .put<ApiResponse<string>>(`${this.apiUrl}/Reservation/updateStatus`, reservationData, {
+        headers,
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+
 
 
   deleteReservation(id: number): Observable<any> {
@@ -357,6 +361,7 @@ export class ClerkService {
       .pipe(catchError(this.handleError));
   }
 
+
   // Payment operations
   getPayments(): Observable<Payment[]> {
     const headers = this.getAuthHeaders();
@@ -379,6 +384,17 @@ export class ClerkService {
     return this.http
       .post<Payment>(`${this.apiUrl}/Payment`, paymentData, { headers })
       .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Posts a payment object to the backend Payment API.
+   * Usage: pass the full payment object as in the curl example.
+   */
+  postPayment(payment: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http.post<any>(`${this.apiUrl}/Payment`, payment, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Report operations
