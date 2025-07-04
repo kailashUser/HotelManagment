@@ -1,15 +1,14 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { routes } from './app.routes';
-import { provideClientHydration } from '@angular/platform-browser';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { provideToastr } from 'ngx-toastr';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import {
   provideHttpClient,
-  withInterceptors,
-  HTTP_INTERCEPTORS,
+  withInterceptors
 } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/core';
+import { provideClientHydration } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { provideToastr } from 'ngx-toastr';
+import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,11 +17,11 @@ export const appConfig: ApplicationConfig = {
     NgbModule,
     provideAnimations(),
     provideToastr({
-      positionClass: 'toast-center-center', // 👈 Show toast in center
-      // timeOut: 5000,
+      positionClass: 'toast-top-right',
+      timeOut: 3000,
       closeButton: true,
-      // progressBar: true,
-      // preventDuplicates: true,
+      progressBar: true,
+      preventDuplicates: true,
     }),
     provideHttpClient(
       withInterceptors([

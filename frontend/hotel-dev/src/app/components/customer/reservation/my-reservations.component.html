@@ -1,92 +1,132 @@
-<div class="container">
+<div class="container py-4">
   <h2 class="mb-4">My Reservations</h2>
 
   <!-- Tabs -->
+  <!-- Tabs -->
   <ul class="nav nav-tabs mb-4">
-    <!-- <li class="nav-item">
-      <a class="nav-link" [class.active]="activeTab === 'ongoing'"
-         (click)="activeTab = 'ongoing'" href="javascript:void(0)">
-        Ongoing
-      </a>
-    </li> -->
     <li class="nav-item">
-      <a class="nav-link" [class.active]="activeTab === 'pending'" (click)="activeTab = 'pending'"
-        href="javascript:void(0)">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'Pending'"
+        (click)="activeTab = 'Pending'"
+        href="javascript:void(0)"
+      >
         Pending
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [class.active]="activeTab === 'completed'" (click)="activeTab = 'completed'"
-        href="javascript:void(0)">
-        Completed
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'Confirmed'"
+        (click)="activeTab = 'Confirmed'"
+        href="javascript:void(0)"
+      >
+        Confirmed
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" [class.active]="activeTab === 'Cancelled'" (click)="activeTab = 'Cancelled'"
-        href="javascript:void(0)">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'CheckedIn'"
+        (click)="activeTab = 'CheckedIn'"
+        href="javascript:void(0)"
+      >
+        Checked In
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'CheckedOut'"
+        (click)="activeTab = 'CheckedOut'"
+        href="javascript:void(0)"
+      >
+        Checked Out
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'Cancelled'"
+        (click)="activeTab = 'Cancelled'"
+        href="javascript:void(0)"
+      >
         Cancelled
       </a>
     </li>
   </ul>
 
-  <!-- Reservations List -->
-  <div class="row">
-    <ng-container *ngFor="let reservation of filteredReservations">
-      <div class="col-md-6 mb-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <h5 class="card-title mb-0">{{ 'Room ' + reservation.id }}</h5>
-              <span class="badge" [ngClass]="getStatusClass(reservation.status)">
-                {{ reservation.status | titlecase }}
-              </span>
-            </div>
+  <!-- Loading Spinner -->
+  <div class="text-center py-5" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status"></div>
+  </div>
 
-            <div class="mb-3">
-              <p class="mb-1">
-                <i class="bi bi-calendar-check me-2"></i>
-                Check-in: {{ reservation.checkIn | date:'mediumDate' }}
-              </p>
-              <p class="mb-1">
-                <i class="bi bi-calendar-x me-2"></i>
-                Check-out: {{ reservation.checkOut | date:'mediumDate' }}
-              </p>
-              <p class="mb-1">
-                <i class="bi bi-people me-2"></i>
-                Guests: {{ reservation.guests }}
-              </p>
-              <p class="mb-0">
-                <i class="bi bi-currency-dollar me-2"></i>
-                Total: ${{ formatPrice(reservation.totalPrice) }}
-              </p>
-            </div>
+  <!-- Reservations Grid -->
+  <div class="row" *ngIf="!isLoading && filteredReservations.length > 0">
+    <div class="col-md-6 mb-4" *ngFor="let reservation of filteredReservations">
+      <div class="card h-100">
+        <div class="card-body">
+          <!-- Header -->
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h5 class="card-title mb-0">Room #{{ reservation.id }}</h5>
+            <span class="badge" [ngClass]="getStatusClass(reservation.status)">
+              {{ reservation.status }}
+            </span>
+          </div>
 
+          <!-- Reservation Info -->
+          <div class="mb-3">
+            <p class="mb-1">
+              <i class="bi bi-calendar-check me-2"></i>
+              Check-in: {{ reservation.checkIn | date : "mediumDate" }}
+            </p>
+            <p class="mb-1">
+              <i class="bi bi-calendar-x me-2"></i>
+              Check-out: {{ reservation.checkOut | date : "mediumDate" }}
+            </p>
+            <p class="mb-1">
+              <i class="bi bi-people me-2"></i>
+              Guests: {{ reservation.guests }}
+            </p>
+            <p class="mb-0">
+              <i class="bi bi-currency-dollar me-2"></i>
+              Total: ${{ formatPrice(reservation.totalPrice) }}
+            </p>
+          </div>
 
-
-
-            <button class="btn btn-sm btn-primary flex-fill" [routerLink]="['/customer/booking', reservation.id]">
-              Book Now
+          <!-- Action Buttons -->
+          <div class="d-flex flex-wrap">
+            <button
+              *ngIf="reservation.status === 'Pending'"
+              class="btn btn-sm btn-primary me-2 mb-2"
+              [routerLink]="['/customer/booking', reservation.id]"
+            >
+              Add Payment Details
             </button>
-            <button class="btn btn-sm btn-danger me-2" *ngIf="reservation.status === 'pending'"
-              (click)="cancelReservation(reservation.id)">
-              Cancel
-            </button>
-            <!-- <button class="btn btn-sm btn-secondary me-2" *ngIf="reservation.status === 'pending'"
-              [routerLink]="['/customer/edit-reservation', reservation.id]">
-              Edit
-            </button> -->
 
+            <button
+              *ngIf="reservation.status === 'Pending'"
+              class="btn btn-sm btn-danger mb-2"
+              (click)="cancelReservation(reservation.id)"
+            >
+              Cancel Reservation
+            </button>
           </div>
         </div>
       </div>
-    </ng-container>
+    </div>
   </div>
 
   <!-- Empty State -->
-  <div class="text-center py-5" *ngIf="filteredReservations.length === 0">
+  <div
+    class="text-center py-5"
+    *ngIf="!isLoading && filteredReservations.length === 0"
+  >
     <i class="bi bi-calendar-x display-1 text-muted"></i>
     <h4 class="mt-3">No Reservations Found</h4>
-    <p class="text-muted">You don't have any {{ activeTab }} reservations.</p>
+    <p class="text-muted">
+      You don't have any {{ activeTab.toLowerCase() }} reservations.
+    </p>
     <button class="btn btn-primary" routerLink="/customer/book-rooms">
       Book a Room
     </button>

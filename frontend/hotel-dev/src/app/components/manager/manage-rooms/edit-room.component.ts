@@ -1,148 +1,131 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
-// Assuming a Room interface exists (can import from customer book-rooms if needed)
-interface Room {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  capacity: number;
-  amenities: string[]; // Assuming array of strings
-  imageUrl: string;
-  available: boolean;
-}
+import { ToastrService } from 'ngx-toastr';
+import { CreateRoomDto } from '../../../models/room.model';
+import { RoomService } from '../../../services/room.service';
 
 @Component({
   selector: 'app-manager-edit-room',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './edit-room.component.html',
-  styleUrls: ['./edit-room.component.scss']
+  styleUrls: ['./edit-room.component.scss'],
 })
 export class EditRoomComponent implements OnInit {
-  roomId: number | null = null;
-  roomData: any = {}; // Placeholder for room data
-  room: Room | undefined;
-  amenitiesString: string = ''; // Property to bind the amenities input
+  editRoomForm!: FormGroup;
+  isSubmitting = false;
+  roomId!: number;
 
-  // Mock room data (should be fetched from a service)
-   private mockRooms: Room[] = [
-      {
-        id: 1,
-        name: 'Deluxe Room',
-        type: 'Deluxe',
-        price: 150,
-        capacity: 2,
-        amenities: ['WiFi', 'TV', 'AC'],
-        imageUrl: 'assets/images/room1.jpg',
-        available: true
-      },
-       {
-        id: 2,
-        name: 'Standard Room',
-        type: 'Standard',
-        price: 100,
-        capacity: 2,
-        amenities: ['WiFi', 'TV'],
-        imageUrl: 'assets/images/room2.jpg',
-        available: false
-      },
-      {
-        id: 3,
-        name: 'Suite',
-        type: 'Suite',
-        price: 250,
-        capacity: 4,
-        amenities: ['WiFi', 'TV', 'AC', 'Balcony'],
-        imageUrl: 'assets/images/room3.jpg',
-        available: true
-      },
-      {
-        id: 4,
-        name: 'Family Room',
-        type: 'Family',
-        price: 200,
-        capacity: 4,
-        amenities: ['WiFi', 'TV', 'AC', 'Kitchenette'],
-        imageUrl: 'assets/images/room4.jpg',
-        available: true
-      },
-      {
-        id: 5,
-        name: 'Single Room',
-        type: 'Single',
-        price: 80,
-        capacity: 1,
-        amenities: ['WiFi'],
-        imageUrl: 'assets/images/room5.jpg',
-        available: true
-      },
-      {
-        id: 6,
-        name: 'Executive Suite',
-        type: 'Suite',
-        price: 350,
-        capacity: 3,
-        amenities: ['WiFi', 'TV', 'AC', 'Balcony', 'Desk'],
-        imageUrl: 'assets/images/room6.jpg',
-        available: true
-      }
-    ];
+  roomtypes = ['Standard', 'Deluxe', 'Suite', 'Executive', 'Presidential'];
+  roomStates = [
+    { label: 'Available', value: 'true' },
+    { label: 'Unavailable', value: 'false' }
+  ];
 
   constructor(
+    private fb: FormBuilder,
+    private roomService: RoomService,
+    private router: Router,
     private route: ActivatedRoute,
-    private router: Router
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.roomId = Number(params.get('id'));
-      if (this.roomId) {
-        this.loadRoomData(this.roomId);
+    // Get room ID from route
+    this.roomId = Number(this.route.snapshot.paramMap.get('id'));
+
+    // Initialize form
+    this.editRoomForm = this.fb.group({
+      Number: ['', Validators.required],
+      Type: ['', Validators.required],
+      Price: ['', [Validators.required, Validators.min(1)]],
+      Capacity: [1, [Validators.required, Validators.min(1), Validators.max(10)]],
+      Description: [''],
+      Available: ['', Validators.required],
+    });
+
+    // Load room data
+    this.loadRoomData();
+  }
+
+  loadRoomData(): void {
+    this.roomService.getRoomById(this.roomId).subscribe({
+      next: (room) => {
+        console.log('Loaded room data:', room);
+        this.editRoomForm.patchValue({
+          Number: room.roomNumber,
+          Type: this.roomtypes[room.type], // Convert number to string
+          Price: room.basePrice,
+          Capacity: room.capacity,
+          Description: room.description || '',
+          Available: room.isAvailable ? 'true' : 'false' // Convert boolean to string
+        });
+      },
+      error: (err) => {
+        console.error('Error loading room:', err);
+        alert('Error loading room data: ' + (err.message || 'Unknown error'));
+        this.router.navigate(['/manager/manage-rooms']);
       }
     });
   }
 
-  loadRoomData(id: number): void {
-    // TODO: Implement logic to load room data by ID
-    console.log('Loading room data for ID:', id);
-    // Mock data for now
-    this.roomData = { 
-      id: id, 
-      number: 'Edit Room 101', 
-      type: 'Single', 
-      status: 'Available', 
-      price: 120, 
-      capacity: 2, 
-      amenities: 'WiFi, TV', 
-      imageUrl: 'path/to/image.jpg' 
-    };
-    this.room = this.mockRooms.find(room => room.id === id);
+  onUpdate(): void {
+    console.log('=== UPDATE FORM SUBMISSION START ===');
+    console.log('Form valid?', this.editRoomForm.valid);
+    console.log('Form value:', this.editRoomForm.value);
 
-    // Initialize amenitiesString from room.amenities
-    if (this.room?.amenities) {
-      this.amenitiesString = this.room.amenities.join(', ');
+    if (this.editRoomForm.invalid) {
+      console.log('Form is invalid, marking all fields as touched');
+      this.markFormGroupTouched();
+      return;
     }
-  }
 
-  updateRoom(): void {
-    // TODO: Implement logic to update room data with validation
-    console.log('Updating room data for ID:', this.roomId, this.roomData);
-    // Show success/error message and navigate back to room list
-    this.router.navigate(['/manager/manage-rooms']);
+    this.isSubmitting = true;
+    const form = this.editRoomForm.value;
+
+    // Convert form values to proper types
+    const roomData: CreateRoomDto = {
+      roomNumber: String(form.Number || ''),
+      type: this.roomtypes.indexOf(form.Type), // Convert string back to number
+      basePrice: Number(form.Price || 0),
+      capacity: Number(form.Capacity || 1),
+      isAvailable: form.Available === 'true', // Convert string to boolean
+      description: form.Description || null,
+    };
+
+    console.log('=== FINAL DATA TO SEND ===');
+    console.log('roomData:', roomData);
+
+    this.roomService.updateRoom(this.roomId, roomData).subscribe({
+      next: (res) => {
+        console.log('SUCCESS! Response:', res);
+        this.isSubmitting = false;
+        this.toastr.success('Room updated successfully!', 'success')
+        this.router.navigate(['/manager/manage-rooms']);
+      },
+      error: (err) => {
+        console.log('ERROR! Full error object:', err);
+        this.isSubmitting = false;
+        alert('Error updating room: ' + (err.message || 'Unknown error'));
+      },
+    });
   }
 
   cancel(): void {
     this.router.navigate(['/manager/manage-rooms']);
   }
 
-  // Method to update room.amenities from amenitiesString
-  updateAmenities(): void {
-    if (this.room && this.amenitiesString !== null) {
-      this.room.amenities = this.amenitiesString.split(',').map(item => item.trim()).filter(item => item.length > 0);
-    }
+  private markFormGroupTouched(): void {
+    Object.values(this.editRoomForm.controls).forEach((control) =>
+      control.markAsTouched()
+    );
   }
-} 
+}

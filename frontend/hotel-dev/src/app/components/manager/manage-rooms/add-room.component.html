@@ -1,52 +1,136 @@
 <div class="container py-4">
-  <h2>Add New Room</h2>
+  <h2 class="mb-4">Add New Room</h2>
 
   <div class="card">
     <div class="card-body">
-      <form #roomForm="ngForm" (ngSubmit)="addRoom()">
+      <form [formGroup]="addRoomForm" (ngSubmit)="onSubmit()">
+        <!-- Room Number -->
         <div class="mb-3">
-          <label for="number" class="form-label">Room Number</label>
-          <input type="text" class="form-control" id="number"
-                 [(ngModel)]="newRoom.number" name="number" required>
-           <!-- Add validation feedback here -->
-        </div>
-         <div class="mb-3">
-          <label for="type" class="form-label">Room Type</label>
-          <input type="text" class="form-control" id="type"
-                 [(ngModel)]="newRoom.type" name="type" required>
-           <!-- Add validation feedback here -->
-        </div>
-        <div class="mb-3">
-          <label for="price" class="form-label">Price per Night</label>
-          <input type="number" class="form-control" id="price"
-                 [(ngModel)]="newRoom.price" name="price" required min="0">
-            <!-- Add validation feedback here -->
-        </div>
-        <div class="mb-3">
-          <label for="capacity" class="form-label">Capacity</label>
-          <input type="number" class="form-control" id="capacity"
-                 [(ngModel)]="newRoom.capacity" name="capacity" required min="1">
-            <!-- Add validation feedback here -->
-        </div>
-         <div class="mb-3">
-          <label for="amenities" class="form-label">Amenities (comma-separated)</label>
-          <input type="text" class="form-control" id="amenities"
-                 [(ngModel)]="newRoom.amenities" name="amenities">
-        </div>
-         <div class="mb-3">
-          <label for="imageUrl" class="form-label">Image URL</label>
-          <input type="text" class="form-control" id="imageUrl"
-                 [(ngModel)]="newRoom.imageUrl" name="imageUrl">
-        </div>
-         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="available"
-                 [(ngModel)]="newRoom.available" name="available">
-          <label class="form-check-label" for="available">Available</label>
+          <label class="form-label">Room Number</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="Number"
+            placeholder="e.g., 101, 202, etc."
+            [ngClass]="{
+              'is-invalid':
+                addRoomForm.get('Number')?.invalid &&
+                addRoomForm.get('Number')?.touched
+            }"
+          />
+          <div class="invalid-feedback">Room number is required.</div>
         </div>
 
-        <button type="submit" class="btn btn-primary" [disabled]="!roomForm.form.valid">Add Room</button>
-        <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+        <!-- Room Type -->
+        <div class="mb-3">
+          <label class="form-label">Room Type</label>
+          <select
+            class="form-control"
+            formControlName="Type"
+            [ngClass]="{
+              'is-invalid':
+                addRoomForm.get('Type')?.invalid &&
+                addRoomForm.get('Type')?.touched
+            }"
+          >
+            <option value="">Select Room Type</option>
+            <option *ngFor="let type of roomTypes; let i = index" [value]="i">
+              {{ type }}
+            </option>
+          </select>
+          <div class="invalid-feedback">Room type is required.</div>
+        </div>
+
+        <!-- Price -->
+        <div class="mb-3">
+          <label class="form-label">Base Price (USD)</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="Price"
+            min="1"
+            step="0.01"
+            placeholder="e.g., 120.00"
+            [ngClass]="{
+              'is-invalid':
+                addRoomForm.get('Price')?.invalid &&
+                addRoomForm.get('Price')?.touched
+            }"
+          />
+          <div class="invalid-feedback">Price must be greater than 0.</div>
+        </div>
+
+        <!-- Capacity -->
+        <div class="mb-3">
+          <label class="form-label">Capacity (Number of Guests)</label>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="Capacity"
+            min="1"
+            max="10"
+            [ngClass]="{
+              'is-invalid':
+                addRoomForm.get('Capacity')?.invalid &&
+                addRoomForm.get('Capacity')?.touched
+            }"
+          />
+          <div class="invalid-feedback">Capacity must be at least 1.</div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            formControlName="Description"
+            placeholder="Describe the room features..."
+          ></textarea>
+        </div>
+
+        <!-- Availability -->
+        <div class="mb-3">
+          <label class="form-label">Availability</label>
+          <select
+            class="form-control"
+            formControlName="Available"
+            [ngClass]="{
+              'is-invalid':
+                addRoomForm.get('Available')?.invalid &&
+                addRoomForm.get('Available')?.touched
+            }"
+          >
+            <option value="">Select Availability</option>
+            <option *ngFor="let status of roomStates" [value]="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+          <div class="invalid-feedback">Select room availability.</div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="d-flex gap-2">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="isSubmitting"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
+            {{ isSubmitting ? "Adding..." : "Add Room" }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            Cancel
+          </button>
+          <!-- TEST BUTTON - Remove this later -->
+          <button type="button" class="btn btn-warning" (click)="testClick()">
+            Test Click
+          </button>
+        </div>
       </form>
     </div>
   </div>
-</div> 
+</div>

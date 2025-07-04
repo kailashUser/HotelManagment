@@ -42,10 +42,10 @@ namespace HotelReservation.Models.Entities
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetTokenExpiry { get; set; }
 
-        //public int? CustomerId { get; set; }
+        public int? CustomerId { get; set; }
 
-        //[ForeignKey("CustomerId")]
-        //public virtual Customer? Customer { get; set; }
+        [ForeignKey("CustomerId")]
+        public virtual Customer? Customer { get; set; }
     }
 
     public enum UserRole
@@ -56,3 +56,4 @@ namespace HotelReservation.Models.Entities
         Customer
     }
 }
+ 

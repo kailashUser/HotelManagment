@@ -9,5 +9,8 @@ namespace HotelReservation.Interfaces
         Task<IEnumerable<User>> GetAllUsersAsync();
         Task<int> RegisterAsync(User user);
         Task<bool> UpdateUserAsync(User user);
+        Task<bool> DeleteUserAsync(int id);
+
+
     }
 }

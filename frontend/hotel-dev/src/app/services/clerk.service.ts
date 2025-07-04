@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { delay, tap, catchError, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { AuthService } from './auth.service';
+import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { Room } from '../interfaces/room.interface';
+import { ApiResponse } from '../models/ApiResponse';
+import { AuthService } from './auth.service';
 
 interface Customer {
   id: number;
@@ -30,18 +31,18 @@ interface Reservation {
   id: number;
   customerId: number;
   roomId: number;
-  checkInDate: string; // Assuming ISO 8601 date string
-  checkOutDate: string; // Assuming ISO 8601 date string
-  actualCheckIn?: string; // Optional, assuming ISO 8601
-  actualCheckOut?: string; // Optional, assuming ISO 8601
-  status: number; // Or string like 'Active', 'Completed', 'Cancelled' - check API response
+  checkInDate: string;
+  checkOutDate: string;
+  actualCheckIn?: string | null;
+  actualCheckOut?: string | null;
+  status: number;
   totalAmount: number;
   depositAmount?: number;
   specialRequests?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  customer?: Customer; // Assuming API might embed customer details
-  room?: Room; // Assuming API might embed room details
+  createdAt?: string | null;
+  updatedAt?: string | null;
+  customer?: Customer;
+  room?: Room;
 }
 
 interface Billing {
@@ -224,8 +225,14 @@ export class ClerkService {
   getReservations(): Observable<Reservation[]> {
     const headers = this.getAuthHeaders();
     return this.http
-      .get<Reservation[]>(`${this.apiUrl}/Reservation`, { headers })
-      .pipe(catchError(this.handleError));
+      .get<{ success: boolean; message: string; data: Reservation[] }>(
+        `${this.apiUrl}/Reservation/with-customer`,
+        { headers }
+      )
+      .pipe(
+        map((response) => response.data),
+        catchError(this.handleError)
+      );
   }
 
   getReservationById(id: number): Observable<Reservation> {
@@ -279,14 +286,37 @@ export class ClerkService {
       .pipe(catchError(this.handleError));
   }
 
-  updateReservation(
+  updatestatus(
     reservationData: Partial<Reservation> & { id: number }
-  ): Observable<Reservation> {
+  ): Observable<ApiResponse<string>> {
     const headers = this.getAuthHeaders();
     return this.http
-      .put<Reservation>(`${this.apiUrl}/Reservation`, reservationData, {
-        headers,
-      })
+      .put<ApiResponse<string>>(
+        `${this.apiUrl}/Reservation/updateStatus`,
+        reservationData,
+        {
+          headers,
+        }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  updateCheckout(
+    reservationData: Partial<Reservation>
+  ): Observable<ApiResponse<string>> {
+    const headers = this.getAuthHeaders();
+    const url = `${this.apiUrl}/Reservation`;
+
+    // Add UpdatedAt timestamp to match your C# UpdateAsync method
+    const updateData = {
+      ...reservationData,
+      updatedAt: new Date().toISOString(),
+    };
+
+    console.log('Sending reservation update request:', updateData);
+
+    return this.http
+      .put<ApiResponse<string>>(url, updateData, { headers })
       .pipe(catchError(this.handleError));
   }
 
@@ -361,6 +391,17 @@ export class ClerkService {
       .pipe(catchError(this.handleError));
   }
 
+  /**
+   * Posts a payment object to the backend Payment API.
+   * Usage: pass the full payment object as in the curl example.
+   */
+  postPayment(payment: any): Observable<any> {
+    const headers = this.getAuthHeaders();
+    return this.http
+      .post<any>(`${this.apiUrl}/Payment`, payment, { headers })
+      .pipe(catchError(this.handleError));
+  }
+
   // Report operations
   getTotalRevenue(from?: string, to?: string): Observable<TotalRevenueReport> {
     const headers = this.getAuthHeaders();
@@ -420,5 +461,18 @@ export class ClerkService {
     return this.http
       .get<Customer>(`${this.apiUrl}/Customer/${id}`, { headers })
       .pipe(catchError(this.handleError));
+  }
+
+  duplicateNoShowBilling(reservationID: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    return this.http.post(
+      `${this.apiUrl}/Payment/NoShowBilling?reservationID=${reservationID}`,
+      {},
+      { headers }
+    );
   }
 }

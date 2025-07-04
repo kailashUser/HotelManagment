@@ -1,5 +1,9 @@
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -26,7 +30,7 @@ interface ApiResponse<T> {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CustomerService {
   private readonly apiUrl = environment.apiUrl;
@@ -40,7 +44,7 @@ export class CustomerService {
     const token = this.authService.getToken();
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : ''
+      Authorization: token ? `Bearer ${token}` : '',
     });
   }
 
@@ -57,28 +61,74 @@ export class CustomerService {
 
   // 🔍 Customer Profile
   getCustomerProfile(): Observable<Customer> {
-    return this.http.get<Customer>(`${this.apiUrl}/Customer/profile`, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .get<Customer>(`${this.apiUrl}/Customer`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
-  updateCustomerProfile(customerData: Partial<Customer>): Observable<ApiResponse<Customer>> {
-    return this.http.put<ApiResponse<Customer>>(`${this.apiUrl}/Customer/profile`, customerData, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+  updateCustomerProfile(
+    customerData: Partial<Customer>
+  ): Observable<ApiResponse<Customer>> {
+    return this.http
+      .put<ApiResponse<Customer>>(
+        `${this.apiUrl}/Customer/profile`,
+        customerData,
+        {
+          headers: this.getAuthHeaders(),
+        }
+      )
+      .pipe(catchError(this.handleError));
   }
 
   // 📅 Reservations
   getCustomerReservations(): Observable<Reservation[]> {
-    return this.http.get<Reservation[]>(`${this.apiUrl}/Customer/reservations`, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .get<Reservation[]>(`${this.apiUrl}/Customer/reservations`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   getReservationById(reservationId: number): Observable<Reservation> {
-    return this.http.get<Reservation>(`${this.apiUrl}/Customer/reservations/${reservationId}`, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .get<Reservation>(
+        `${this.apiUrl}/Customer/reservations/${reservationId}`,
+        {
+          headers: this.getAuthHeaders(),
+        }
+      )
+      .pipe(catchError(this.handleError));
+  }
+  getReservationsByCustomer(
+    customerId: number
+  ): Observable<ApiResponse<Reservation[]>> {
+    return this.http
+      .get<ApiResponse<Reservation[]>>(
+        `${this.apiUrl}/Reservation/by-customer/${customerId}`,
+        { headers: this.getAuthHeaders() }
+      )
+      .pipe(catchError(this.handleError));
+  }
+
+  // PUT update reservation
+  updateReservation(reservation: Reservation): Observable<ApiResponse<any>> {
+    return this.http
+      .put<ApiResponse<any>>(`${this.apiUrl}/Reservation`, reservation, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  // Update reservation using the correct endpoint
+  updateReservationById(reservation: Reservation): Observable<any> {
+    console.log('Reservation object being sent in PUT:', reservation);
+    return this.http.put<any>(
+      `${this.apiUrl}/Reservation/updateReservation`,
+      reservation,
+      { headers: this.getAuthHeaders() }
+    );
   }
 
   createReservation(reservationData: {
@@ -93,60 +143,84 @@ export class CustomerService {
       parking: boolean;
     };
   }): Observable<Reservation> {
-    return this.http.post<Reservation>(`${this.apiUrl}/Customer/reservations`, reservationData, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .post<Reservation>(`${this.apiUrl}/Reservation`, reservationData, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   cancelReservation(reservationId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/Customer/reservations/${reservationId}`, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .delete<void>(`${this.apiUrl}/Customer/reservations/${reservationId}`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   // 🏨 Room Lookup
-  getAvailableRooms(checkInDate: string, checkOutDate: string): Observable<Room[]> {
-    return this.http.get<Room[]>(`${this.apiUrl}/Customer/rooms/available`, {
-      headers: this.getAuthHeaders(),
-      params: { checkInDate, checkOutDate }
-    }).pipe(catchError(this.handleError));
+  getAvailableRooms(
+    checkInDate: string,
+    checkOutDate: string
+  ): Observable<Room[]> {
+    return this.http
+      .get<Room[]>(`${this.apiUrl}/Customer/rooms/available`, {
+        headers: this.getAuthHeaders(),
+        params: { checkInDate, checkOutDate },
+      })
+      .pipe(catchError(this.handleError));
   }
 
   getRoomDetails(roomId: number): Observable<Room> {
-    return this.http.get<Room>(`${this.apiUrl}/Customer/rooms/${roomId}`, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .get<Room>(`${this.apiUrl}/Customer/rooms/${roomId}`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
-  // 💳 Payments
-  makePayment(reservationId: number, paymentDetails: PaymentDetails): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/Customer/payments`, {
-      reservationId,
-      ...paymentDetails
-    }, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+  makePayment(paymentDetails: any): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(
+      `${this.apiUrl}/Payment`,
+      paymentDetails,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
   }
 
   getPaymentHistory(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Customer/payments`, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .get<any[]>(`${this.apiUrl}/Customer/payments`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   // 🧾 Services
-  requestService(serviceType: string, details: any): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/Customer/services`, {
-      type: serviceType,
-      details
-    }, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+  requestService(
+    serviceType: string,
+    details: any
+  ): Observable<ApiResponse<any>> {
+    return this.http
+      .post<ApiResponse<any>>(
+        `${this.apiUrl}/Customer/services`,
+        {
+          type: serviceType,
+          details,
+        },
+        {
+          headers: this.getAuthHeaders(),
+        }
+      )
+      .pipe(catchError(this.handleError));
   }
 
   getServiceHistory(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/Customer/services`, {
-      headers: this.getAuthHeaders()
-    }).pipe(catchError(this.handleError));
+    return this.http
+      .get<any[]>(`${this.apiUrl}/Customer/services`, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(catchError(this.handleError));
   }
 }

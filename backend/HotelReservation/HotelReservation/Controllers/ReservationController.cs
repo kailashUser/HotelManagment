@@ -19,6 +19,27 @@ namespace HotelReservation.Controllers
             _repo = repo;
         }
 
+        [HttpGet("with-customer")]
+        public async Task<IActionResult> GetAllWithCustomer()
+        {
+            var result = await _repo.GetAllWithCustomerAsync();
+            return Ok(ApiResponse<IEnumerable<ReservationWithCustomer>>.Ok(result));
+        }
+
+       
+        [HttpGet("with-customer/{id}")]
+        public async Task<IActionResult> GetByIdWithCustomer(int id)
+        {
+            var result = await _repo.GetByIdWithCustomerAsync(id);
+            if (result == null)
+                return NotFound(ApiResponse<string>.Fail("Reservation not found"));
+
+            return Ok(ApiResponse<ReservationWithCustomer>.Ok(result));
+        }
+
+
+
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -86,5 +107,41 @@ namespace HotelReservation.Controllers
                 ? Ok(ApiResponse<string>.Ok("Reservation cancelled successfully"))
                 : BadRequest(ApiResponse<string>.Fail("Cancellation failed"));
         }
+
+        [HttpGet("by-customer/{customerId}")]
+        public async Task<IActionResult> GetByCustomerId(int customerId)
+        {
+            var result = await _repo.GetByCustomerIdAsync(customerId);
+            return Ok(ApiResponse<IEnumerable<Reservation>>.Ok(result));
+        }
+
+        [HttpPut("updateStatus")]
+        public async Task<IActionResult> updateStatus([FromBody] Reservation reservation)
+        {
+            if (reservation.CheckOutDate <= reservation.CheckInDate)
+                return BadRequest(ApiResponse<string>.Fail("Check-out date must be after check-in date"));
+
+            reservation.UpdatedAt = DateTime.UtcNow;
+            var success = await _repo.updateStatus(reservation);
+            if (!success)
+                return NotFound(ApiResponse<string>.Fail("Reservation not found"));
+
+            return Ok(ApiResponse<string>.Ok("Reservation updated successfully"));
+        }
+
+        [HttpPut("ReservationUpdate")]
+        public async Task<IActionResult> updateStatusCheckout([FromBody] Reservation reservation)
+        {
+            if (reservation.CheckOutDate <= reservation.CheckInDate)
+                return BadRequest(ApiResponse<string>.Fail("Check-out date must be after check-in date"));
+
+            reservation.UpdatedAt = DateTime.UtcNow;
+            var success = await _repo.updateStatus(reservation);
+            if (!success)
+                return NotFound(ApiResponse<string>.Fail("Reservation not found"));
+
+            return Ok(ApiResponse<string>.Ok("Reservation updated successfully"));
+        }
+
     }
 }

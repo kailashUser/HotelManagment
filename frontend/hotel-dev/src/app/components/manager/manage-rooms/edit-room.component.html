@@ -1,54 +1,141 @@
-<div class="container">
-  <h2 class="mb-4">Edit Room</h2>
+<div class="container py-4">
+  <h2>Edit Room</h2>
 
-  <div *ngIf="room">
-    <form #roomForm="ngForm" (ngSubmit)="updateRoom()">
-      <div class="mb-3">
-        <label for="name" class="form-label">Room Name</label>
-        <input type="text" class="form-control" id="name" 
-               [(ngModel)]="room.name" name="name" required>
-         <!-- Add validation feedback here -->
-      </div>
-       <div class="mb-3">
-        <label for="type" class="form-label">Room Type</label>
-        <input type="text" class="form-control" id="type" 
-               [(ngModel)]="room.type" name="type" required>
-       <!-- Add validation feedback here -->
+  <div class="card">
+    <div class="card-body">
+      <form [formGroup]="editRoomForm" (ngSubmit)="onUpdate()">
+        <div class="mb-3">
+          <label for="roomNumber" class="form-label">Room Number</label>
+          <input
+            type="text"
+            id="roomNumber"
+            class="form-control"
+            formControlName="Number"
+            [ngClass]="{
+              'is-invalid':
+                editRoomForm.get('Number')?.invalid &&
+                editRoomForm.get('Number')?.touched
+            }"
+          />
+          <div class="invalid-feedback">Room number is required.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="type" class="form-label">Room Type</label>
+          <select
+            id="type"
+            class="form-control"
+            formControlName="Type"
+            [ngClass]="{
+              'is-invalid':
+                editRoomForm.get('Type')?.invalid &&
+                editRoomForm.get('Type')?.touched
+            }"
+          >
+            <option value="">Select Room Type</option>
+            <option *ngFor="let type of roomtypes" [value]="type">
+              {{ type }}
+            </option>
+          </select>
+          <div class="invalid-feedback">Room type is required.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="basePrice" class="form-label">Base Price per Night</label>
+          <input
+            type="number"
+            id="basePrice"
+            class="form-control"
+            formControlName="Price"
+            min="1"
+            [ngClass]="{
+              'is-invalid':
+                editRoomForm.get('Price')?.invalid &&
+                editRoomForm.get('Price')?.touched
+            }"
+          />
+          <div class="invalid-feedback">
+            Base price is required and must be greater than 0.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="capacity" class="form-label">Capacity (Max Guests)</label>
+          <input
+            type="number"
+            id="capacity"
+            class="form-control"
+            formControlName="Capacity"
+            min="1"
+            max="10"
+            [ngClass]="{
+              'is-invalid':
+                editRoomForm.get('Capacity')?.invalid &&
+                editRoomForm.get('Capacity')?.touched
+            }"
+          />
+          <div class="invalid-feedback">
+            Capacity is required and must be between 1 and 10.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Room Description</label>
+          <textarea
+            id="description"
+            rows="4"
+            class="form-control"
+            formControlName="Description"
+            placeholder="Describe the room features, amenities, and special characteristics..."
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="roomAvailable" class="form-label"
+            >Room Availability</label
+          >
+          <select
+            id="roomAvailable"
+            class="form-control"
+            formControlName="Available"
+            [ngClass]="{
+              'is-invalid':
+                editRoomForm.get('Available')?.invalid &&
+                editRoomForm.get('Available')?.touched
+            }"
+          >
+            <option value="">Select Availability Status</option>
+            <option *ngFor="let status of roomStates" [value]="status.value">
+              {{ status.label }}
+            </option>
+          </select>
+          <div class="invalid-feedback">
+            Please select room availability status.
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="isSubmitting"
+          >
+            <span
+              *ngIf="isSubmitting"
+              class="spinner-border spinner-border-sm me-2"
+            ></span>
+            Update Room
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="cancel()"
+            [disabled]="isSubmitting"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="mb-3">
-      <label for="price" class="form-label">Price per Night</label>
-      <input type="number" class="form-control" id="price" 
-             [(ngModel)]="room.price" name="price" required min="0">
-        <!-- Add validation feedback here -->
-    </div>
-    <div class="mb-3">
-      <label for="capacity" class="form-label">Capacity</label>
-      <input type="number" class="form-control" id="capacity" 
-             [(ngModel)]="room.capacity" name="capacity" required min="1">
-        <!-- Add validation feedback here -->
-    </div>
-     <div class="mb-3">
-      <label for="amenities" class="form-label">Amenities (comma-separated)</label>
-      <input type="text" class="form-control" id="amenities" 
-             [(ngModel)]="amenitiesString" name="amenitiesString"
-             (ngModelChange)="updateAmenities()">
-    </div>
-     <div class="mb-3">
-      <label for="imageUrl" class="form-label">Image URL</label>
-      <input type="text" class="form-control" id="imageUrl" 
-             [(ngModel)]="room.imageUrl" name="imageUrl">
-    </div>
-     <div class="mb-3 form-check">
-      <input type="checkbox" class="form-check-input" id="available" 
-             [(ngModel)]="room.available" name="available">
-      <label class="form-check-label" for="available">Available</label>
-    </div>
-    
-    <button type="submit" class="btn btn-primary" [disabled]="!roomForm.form.valid">Update Room</button>
-    <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
-  </form>
   </div>
-   <div *ngIf="!room">
-    <p>Loading room details or room not found...</p>
-  </div>
-</div> 
+</div>

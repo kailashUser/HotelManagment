@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { RoomService } from '../../../services/room.service';
 
-// Assuming a Room interface exists (can import from customer book-rooms if needed)
 interface Room {
   id: number;
   name: string;
@@ -23,31 +23,43 @@ interface Room {
   styleUrls: ['./room-list.component.scss']
 })
 export class RoomListComponent implements OnInit {
-  rooms: any[] = []; // Placeholder for room data
+  rooms: Room[] = [];
 
-  constructor(private roomServices: RoomService) { }
+  constructor(private roomService: RoomService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    // Load room data (placeholder)
     this.loadRooms();
   }
 
   loadRooms(): void {
-    this.roomServices.getAllRooms().subscribe((data) => {
-      this.rooms = data;
-      console.log("rooms loading" + data)
-    })
+    this.roomService.getAllRooms().subscribe({
+      next: (data) => {
+        this.rooms = data;
+        console.log('Rooms loaded:', data);
+      },
+      error: (err) => {
+        console.error('Failed to load rooms:', err);
+      }
+    });
   }
 
   editRoom(id: number): void {
-    // TODO: Navigate to edit room page
-    console.log('Editing room with ID:', id);
+
+    this.router.navigate(['/manager/edit-room', id]);
   }
 
   deleteRoom(id: number): void {
-    // TODO: Implement delete room logic
-    console.log('Deleting room with ID:', id);
-    // Remove from mock data for immediate view update
-    this.rooms = this.rooms.filter(r => r.id !== id);
+
+    this.roomService.deleteRoom(id).subscribe({
+      next: () => {
+
+        this.rooms = this.rooms.filter(r => r.id !== id);
+        this.toastr.success(' Room deleted successful!.', 'Success');
+      },
+      error: (err) => {
+        console.error('Failed to delete room:', err);
+        this.toastr.error('Failed to delete room. Please try again')
+      }
+    });
   }
 }

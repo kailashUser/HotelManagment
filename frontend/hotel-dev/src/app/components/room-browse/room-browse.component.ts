@@ -34,30 +34,7 @@ export class RoomBrowseComponent implements OnInit {
   };
 
   ngOnInit() {
-    // Mock data - replace with actual API call
-    this.rooms = [
-      {
-        id: 1,
-        roomNumber: '101',
-        type: 'Deluxe King',
-        price: 200,
-        capacity: 2,
-        amenities: ['King Bed', 'Ocean View', 'Balcony'],
-        imageUrl: 'assets/images/room1.jpg',
-        isAvailable: true
-      },
-      {
-        id: 2,
-        roomNumber: '102',
-        type: 'Deluxe Queen',
-        price: 180,
-        capacity: 2,
-        amenities: ['Queen Bed', 'City View'],
-        imageUrl: 'assets/images/room2.jpg',
-        isAvailable: true
-      },
-      // Add more mock rooms here...
-    ];
+
     this.calculateTotalPages();
   }
 
@@ -108,4 +85,4 @@ export class RoomBrowseComponent implements OnInit {
       // Add success message or redirect
     }
   }
-} 
+}

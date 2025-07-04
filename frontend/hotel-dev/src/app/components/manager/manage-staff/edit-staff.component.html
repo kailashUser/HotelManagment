@@ -3,37 +3,56 @@
 
   <div *ngIf="staffData" class="card">
     <div class="card-body">
-      <form #staffForm="ngForm" (ngSubmit)="updateStaff()">
+      <form [formGroup]="editStaffForm" (ngSubmit)="onSubmit()">
         <div class="mb-3">
           <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name"
-                 [(ngModel)]="staffData.name" name="name" required>
-           <!-- Add validation feedback here -->
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            [(ngModel)]="staffData.name"
+            name="name"
+            formControlName="name"
+            required
+          />
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email"
-                 [(ngModel)]="staffData.email" name="email" required email>
-            <!-- Add validation feedback here -->
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            [(ngModel)]="staffData.email"
+            name="email"
+            required
+            formControlName="email"
+            email
+          />
         </div>
         <div class="mb-3">
           <label for="role" class="form-label">Role</label>
-           <select class="form-select" id="role"
-                  [(ngModel)]="staffData.role" name="role" required>
+          <select
+            class="form-select"
+            id="role"
+            [(ngModel)]="staffData.role"
+            name="role"
+            formControlName="role"
+            (change)="getRoleId($any($event.target).value)"
+            required
+          >
             <option value="">Select Role</option>
-            <option value="Receptionist">Receptionist</option>
-            <option value="Housekeeping">Housekeeping</option>
-            <option value="Manager">Manager</option>
+            <option *ngFor="let role of staffRole" [value]="role">
+              {{ role }}
+            </option>
           </select>
-            <!-- Add validation feedback here -->
         </div>
 
         <button type="submit" class="btn btn-primary">Update Staff</button>
-        <button type="button" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn btn-secondary ms-2">Cancel</button>
       </form>
     </div>
   </div>
-   <div *ngIf="!staffData">
+  <div *ngIf="!staffData">
     <p>Loading staff member details or staff member not found...</p>
   </div>
-</div> 
+</div>

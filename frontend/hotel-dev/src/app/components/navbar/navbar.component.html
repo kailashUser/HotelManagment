@@ -1,8 +1,12 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
   <div class="container">
     <a class="navbar-brand" routerLink="/">CheckInGo</a>
-    <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed"
-      aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="isMenuCollapsed = !isMenuCollapsed"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -10,38 +14,51 @@
       <ul class="navbar-nav me-auto">
         <!-- Customer -->
         <ng-container *ngIf="isAuthenticated && userRole === 'Customer'">
-          <li class="nav-item"><a class="nav-link" routerLink="/home">Home</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/customer">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/about">About</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/contact">Contacts</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/service">services</a></li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/home">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/customer">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/contact">Contacts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/service">services</a>
+          </li>
         </ng-container>
 
         <!-- Manager -->
         <ng-container *ngIf="isAuthenticated && userRole === 'Manager'">
-          <li class="nav-item"><a class="nav-link" routerLink="/manager">Dashboard</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/manage-rooms">Manage Rooms</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/manage-users">Manage Users</a></li>
         </ng-container>
 
         <!-- Clerk -->
         <ng-container *ngIf="isAuthenticated && userRole === 'Clerk'">
-          <li class="nav-item"><a class="nav-link" routerLink="/clerk/profile">Profile</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/clerk/manage-room-states">Manage Room States</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/clerk/customer-reservations">Customer Reservations</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/clerk/check-out">Check Out</a></li>
         </ng-container>
 
         <!-- Travel Company -->
         <ng-container *ngIf="isAuthenticated && userRole === 'TravelCompany'">
-          <li class="nav-item"><a class="nav-link" routerLink="/profile">Profile</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/rooms">Browse Rooms</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/my-reservations">My Reservations</a></li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/profile">Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/rooms">Browse Rooms</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/my-reservations"
+              >My Reservations</a
+            >
+          </li>
         </ng-container>
 
         <!-- Admin (if needed) -->
         <ng-container *ngIf="isAuthenticated && userRole === 'Admin'">
-          <li class="nav-item"><a class="nav-link" routerLink="/admin">Admin Panel</a></li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/admin">Admin Panel</a>
+          </li>
         </ng-container>
       </ul>
 
@@ -49,24 +66,34 @@
         <!-- Not logged in -->
         <ng-container *ngIf="!isAuthenticated">
           <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/about">About</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/service">services</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/contact">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/login">Login</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/register">Register</a></li>
-
-
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/service">services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/contact">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register">Register</a>
+          </li>
         </ng-container>
 
         <!-- Logged in -->
         <ng-container *ngIf="isAuthenticated">
           <li class="nav-item d-flex align-items-center me-3">
-            <span class="nav-link disabled text-primary" >
+            <span class="nav-link disabled text-primary">
               {{ username }} <span class="text-muted">({{ userRole }})</span>
             </span>
           </li>
           <li class="nav-item">
-            <a class="nav-link" (click)="logout()" style="cursor: pointer;">Logout</a>
+            <a class="nav-link" (click)="logout()" style="cursor: pointer"
+              >Logout</a
+            >
           </li>
         </ng-container>
       </ul>
@@ -75,4 +102,4 @@
 </nav>
 
 <!-- Add padding to body to account for fixed navbar -->
-<div style="padding-top: 76px;"></div>
+<div style="padding-top: 76px"></div>

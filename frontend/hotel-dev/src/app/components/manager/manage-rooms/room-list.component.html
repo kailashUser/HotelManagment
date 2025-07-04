@@ -22,9 +22,11 @@
       <tbody>
         <tr *ngFor="let room of rooms">
           <th scope="row">{{ room.id }}</th>
-          <td>{{ room.number }}</td>
+          <td>{{ room.name }}</td>
           <td>{{ room.type }}</td>
-          <td>{{ room.status }}</td>
+          <td [ngClass]="room.available ? 'text-success' : 'text-danger'">
+            {{ room.available ? "Available" : "Occupied" }}
+          </td>
           <td>{{ room.price | currency }}</td>
           <td>
             <button

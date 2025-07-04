@@ -1,0 +1,107 @@
+<div
+  class="container py-5 d-flex justify-content-center align-items-center"
+  style="min-height: 80vh"
+>
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%">
+    <h3 class="mb-4 text-center">Payment</h3>
+    <div class="mb-3 text-center">
+      <span class="fs-5">Total Amount:</span>
+      <span class="fw-bold fs-4 text-success">{{
+        totalAmount | currency
+      }}</span>
+    </div>
+    <div class="mb-3 text-center"></div>
+    <div class="mb-4">
+      <label class="form-label fw-bold">Payment Method</label>
+      <div class="btn-group w-100 mb-2" role="group">
+        <input
+          type="radio"
+          class="btn-check"
+          name="paymentMethod"
+          id="pay-cash"
+          value="cash"
+          [(ngModel)]="paymentMethod"
+          autocomplete="off"
+          [disabled]="isLoading"
+        />
+        <label class="btn btn-outline-success" for="pay-cash">
+          <i class="bi bi-cash-coin"></i> Cash
+        </label>
+        <input
+          type="radio"
+          class="btn-check"
+          name="paymentMethod"
+          id="pay-card"
+          value="card"
+          [(ngModel)]="paymentMethod"
+          autocomplete="off"
+          [disabled]="isLoading"
+        />
+        <label class="btn btn-outline-primary" for="pay-card">
+          <i class="bi bi-credit-card"></i> Card
+        </label>
+      </div>
+    </div>
+    <div *ngIf="paymentMethod === 'card'">
+      <div class="mb-3">
+        <label class="form-label">Card Number</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="cardNumber"
+          placeholder="1234 5678 9012 3456"
+          [disabled]="isLoading"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Card Holder Name</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="cardHolder"
+          placeholder="(e.g. Alice Smith)"
+          [disabled]="isLoading"
+        />
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <label class="form-label">Expiry Date</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="cardExpiry"
+            placeholder="(e.g. 12/25)"
+            [disabled]="isLoading"
+          />
+        </div>
+        <div class="col-6">
+          <label class="form-label">CVC</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="cardCvc"
+            placeholder="(e.g. 123)"
+            [disabled]="isLoading"
+          />
+        </div>
+      </div>
+    </div>
+    <button
+      class="btn btn-primary w-100 mt-4"
+      (click)="completePayment()"
+      [disabled]="isLoading"
+    >
+      <span *ngIf="!isLoading">
+        <i class="bi bi-credit-card me-2"></i>Complete Payment
+      </span>
+      <span *ngIf="isLoading">
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        Processing Payment...
+      </span>
+    </button>
+  </div>
+</div>
