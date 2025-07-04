@@ -124,7 +124,7 @@ export class ClerkService {
     private http: HttpClient,
     private authService: AuthService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken();
@@ -230,11 +230,10 @@ export class ClerkService {
         { headers }
       )
       .pipe(
-        map(response => response.data),
+        map((response) => response.data),
         catchError(this.handleError)
       );
   }
-
 
   getReservationById(id: number): Observable<Reservation> {
     const headers = this.getAuthHeaders();
@@ -287,32 +286,39 @@ export class ClerkService {
       .pipe(catchError(this.handleError));
   }
 
-
   updatestatus(
     reservationData: Partial<Reservation> & { id: number }
   ): Observable<ApiResponse<string>> {
     const headers = this.getAuthHeaders();
     return this.http
-      .put<ApiResponse<string>>(`${this.apiUrl}/Reservation/updateStatus`, reservationData, {
-        headers,
-      })
+      .put<ApiResponse<string>>(
+        `${this.apiUrl}/Reservation/updateStatus`,
+        reservationData,
+        {
+          headers,
+        }
+      )
       .pipe(catchError(this.handleError));
   }
-
 
   updateCheckout(
-    reservationData: Partial<Reservation> & { id: number }
+    reservationData: Partial<Reservation>
   ): Observable<ApiResponse<string>> {
     const headers = this.getAuthHeaders();
+    const url = `${this.apiUrl}/Reservation`;
+
+    // Add UpdatedAt timestamp to match your C# UpdateAsync method
+    const updateData = {
+      ...reservationData,
+      updatedAt: new Date().toISOString(),
+    };
+
+    console.log('Sending reservation update request:', updateData);
+
     return this.http
-      .put<ApiResponse<string>>(`${this.apiUrl}/Reservation/updateStatus`, reservationData, {
-        headers,
-      })
+      .put<ApiResponse<string>>(url, updateData, { headers })
       .pipe(catchError(this.handleError));
   }
-
-
-
 
   deleteReservation(id: number): Observable<any> {
     const headers = this.getAuthHeaders();
@@ -361,7 +367,6 @@ export class ClerkService {
       .pipe(catchError(this.handleError));
   }
 
-
   // Payment operations
   getPayments(): Observable<Payment[]> {
     const headers = this.getAuthHeaders();
@@ -392,9 +397,9 @@ export class ClerkService {
    */
   postPayment(payment: any): Observable<any> {
     const headers = this.getAuthHeaders();
-    return this.http.post<any>(`${this.apiUrl}/Payment`, payment, { headers }).pipe(
-      catchError(this.handleError)
-    );
+    return this.http
+      .post<any>(`${this.apiUrl}/Payment`, payment, { headers })
+      .pipe(catchError(this.handleError));
   }
 
   // Report operations
@@ -456,5 +461,18 @@ export class ClerkService {
     return this.http
       .get<Customer>(`${this.apiUrl}/Customer/${id}`, { headers })
       .pipe(catchError(this.handleError));
+  }
+
+  duplicateNoShowBilling(reservationID: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    return this.http.post(
+      `${this.apiUrl}/Payment/NoShowBilling?reservationID=${reservationID}`,
+      {},
+      { headers }
+    );
   }
 }

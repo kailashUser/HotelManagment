@@ -33,7 +33,6 @@ import { RevenueDashboardComponent } from './components/manager/revenues/revenue
 // Import Clerk Components
 
 import { CheckInComponent } from './components/clerk/check-in.component';
-
 import { CheckOutComponent } from './components/clerk/billing/check-out.component';
 import { ProfileComponent as ClerkProfileComponent } from './components/clerk/profile/profile.component';
 import { AddReservationComponent } from './components/clerk/reservations/add-reservation.component';
@@ -41,6 +40,7 @@ import { CustomerReservationsComponent } from './components/clerk/reservations/c
 import { ReservationFormComponent } from './components/clerk/reservations/reservation-form.component';
 import { RoomStatusComponent } from './components/clerk/room-status/room-status.component';
 import { ClerkLayoutComponent } from './components/clerk/shared/clerk-layout.component';
+import { ReservationAutomaticCanelComponent } from './components/clerk/reservation-automatic-canel/reservation-automatic-canel.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -63,8 +63,8 @@ export const routes: Routes = [
       { path: 'add-room', component: ManagerAddRoomComponent },
       { path: 'edit-room/:id', component: ManagerEditRoomComponent },
       { path: 'revenues', component: RevenueDashboardComponent },
-      { path: '', redirectTo: 'profile', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+    ],
   },
   {
     path: 'clerk',
@@ -72,13 +72,20 @@ export const routes: Routes = [
     children: [
       { path: 'profile', component: ClerkProfileComponent },
       { path: 'manage-room-states', component: RoomStatusComponent },
-      { path: 'customer-reservations', component: CustomerReservationsComponent },
+      {
+        path: 'cancel-reservation',
+        component: ReservationAutomaticCanelComponent,
+      },
+      {
+        path: 'customer-reservations',
+        component: CustomerReservationsComponent,
+      },
       { path: 'reservations/add', component: AddReservationComponent },
       { path: 'check-in', component: CheckInComponent },
       { path: 'reservations/new', component: ReservationFormComponent },
       { path: 'check-out', component: CheckOutComponent },
-      { path: '', redirectTo: 'manage-room-states', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'manage-room-states', pathMatch: 'full' },
+    ],
   },
   {
     path: 'customer',
@@ -88,10 +95,9 @@ export const routes: Routes = [
       { path: 'profile', component: CustomerProfileComponent },
       { path: 'my-reservations', component: MyReservationsComponent },
       { path: 'booking/:id', component: BookingFormComponent },
-      { path: 'payment', component: PaymentComponent },
+      { path: 'payment/:id', component: PaymentComponent },
       { path: 'reserve/:id', component: ReserveRoomComponent },
-      { path: '', redirectTo: 'book-rooms', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'book-rooms', pathMatch: 'full' },
+    ],
   },
-
 ];

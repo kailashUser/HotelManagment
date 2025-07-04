@@ -31,18 +31,54 @@ interface Reservation {
               class="form-control"
               placeholder="Search by customer name or room number"
               [(ngModel)]="searchTerm"
-              (input)="filterReservations()" />
-            <button class="btn btn-outline-secondary" type="button" (click)="filterReservations()">
+              (input)="filterReservations()"
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              (click)="filterReservations()"
+            >
               <i class="bi bi-search"></i> Search
             </button>
           </div>
         </div>
         <div class="col-md-6">
           <div class="btn-group float-end">
-            <button class="btn btn-outline-primary" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">All</button>
-            <button class="btn btn-outline-success" [class.active]="currentFilter === 'Confirmed'" (click)="setFilter('Confirmed')">Confirmed</button>
-            <button class="btn btn-outline-warning" [class.active]="currentFilter === 'Pending'" (click)="setFilter('Pending')">Pending</button>
-            <button class="btn btn-outline-danger" [class.active]="currentFilter === 'CheckedIn'" (click)="setFilter('CheckedIn')">CheckedIn</button>
+            <button
+              class="btn btn-outline-primary"
+              [class.active]="currentFilter === 'all'"
+              (click)="setFilter('all')"
+            >
+              All
+            </button>
+            <button
+              class="btn btn-outline-success"
+              [class.active]="currentFilter === 'Confirmed'"
+              (click)="setFilter('Confirmed')"
+            >
+              Confirmed
+            </button>
+            <button
+              class="btn btn-outline-warning"
+              [class.active]="currentFilter === 'Pending'"
+              (click)="setFilter('Pending')"
+            >
+              Pending
+            </button>
+            <button
+              class="btn btn-outline-info"
+              [class.active]="currentFilter === 'CheckedIn'"
+              (click)="setFilter('CheckedIn')"
+            >
+              CheckedIn
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              [class.active]="currentFilter === 'CheckedOut'"
+              (click)="setFilter('CheckedOut')"
+            >
+              CheckedOut
+            </button>
           </div>
         </div>
       </div>
@@ -68,19 +104,34 @@ interface Reservation {
               <td>{{ reservation.checkInDate | date }}</td>
               <td>{{ reservation.checkOutDate | date }}</td>
               <td>
-                <span class="badge" [ngClass]="{
-                  'bg-secondary opaity-75': reservation.status === 'Confirmed',
-                  'bg-warning': reservation.status === 'Pending',
-                  'bg-success': reservation.status === 'CheckedIn'
-                }">{{ reservation.status }}</span>
+                <span
+                  [ngClass]="{
+                    'text-success': reservation.status === 'CheckedIn',
+                    'text-warning': reservation.status === 'Pending',
+                    'text-dark': reservation.status === 'CheckedOut'
+                  }"
+                  >{{ reservation.status }}</span
+                >
               </td>
               <td>
                 <div class="btn-group">
-                  <button class="btn btn-sm btn-primary" [routerLink]="['/clerk/check-out', reservation.id]" *ngIf="reservation.status === 'Confirmed' && isCheckoutDue(reservation.checkOutDate)">
+                  <button
+                    class="btn btn-sm btn-primary"
+                    [routerLink]="['/clerk/check-out', reservation.id]"
+                    *ngIf="
+                      reservation.status === 'Confirmed' &&
+                      isCheckoutDue(reservation.checkOutDate)
+                    "
+                  >
                     Check Out
                   </button>
-                  <button class="btn btn-sm btn-outline-dark" [routerLink]="['/clerk/reservations', reservation.id]">
-                    View Details
+                  <button
+                    *ngIf="reservation.status === 'Confirmed'"
+                    class="btn btn-sm btn-danger"
+                    [routerLink]="['/clerk/reservations', reservation.id]"
+                    (click)="handleDuplicatePayment(reservation.id)"
+                  >
+                    No Show
                   </button>
                 </div>
               </td>
@@ -90,19 +141,45 @@ interface Reservation {
       </div>
 
       <div class="flex-grow-1"></div>
-      <div *ngIf="filteredReservations.length === 0" class="alert alert-info mt-3 mt-auto">
+      <div
+        *ngIf="filteredReservations.length === 0"
+        class="alert alert-info mt-3 mt-auto"
+      >
         No reservations found matching your criteria.
       </div>
     </div>
   `,
-  styles: [`
-    .btn-group { gap: 0.5rem; }
-    .btn-outline-primary.active { background-color: #007bff; color: #fff; }
-    .btn-outline-success.active { background-color: #28a745; color: #fff; }
-    .btn-outline-warning.active { background-color: #ffc107; color: #212529; }
-    .btn-outline-danger.active { background-color: #dc3545; color: #fff; }
-    .badge { padding: 0.5em 0.75em; font-size: 0.8em; }
-  `]
+  styles: [
+    `
+      .btn-group {
+        gap: 0.5rem;
+      }
+      .btn-outline-primary.active {
+        background-color: #007bff;
+        color: #fff;
+      }
+      .btn-outline-success.active {
+        background-color: #28a745;
+        color: #fff;
+      }
+      .btn-outline-warning.active {
+        background-color: #ffc107;
+        color: #212529;
+      }
+      .btn-outline-info.active {
+        background-color: #17a2b8;
+        color: #fff;
+      }
+      .btn-outline-danger.active {
+        background-color: #dc3545;
+        color: #fff;
+      }
+      .badge {
+        padding: 0.5em 0.75em;
+        font-size: 0.8em;
+      }
+    `,
+  ],
 })
 export class CustomerReservationsComponent implements OnInit {
   reservations: Reservation[] = [];
@@ -113,7 +190,7 @@ export class CustomerReservationsComponent implements OnInit {
   constructor(
     private clerkService: ClerkService,
     private toastr: ToastrService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     console.log('[INIT] Component loaded');
@@ -124,16 +201,16 @@ export class CustomerReservationsComponent implements OnInit {
     this.clerkService.getReservations().subscribe({
       next: (data: Reservation[]) => {
         console.log('[API] Raw reservations:', data);
-        this.reservations = data.map(res => ({
+        this.reservations = data.map((res) => ({
           ...res,
-          status: this.mapStatus(res.status)
+          status: this.mapStatus(res.status),
         }));
         this.filterReservations();
       },
-      error: err => {
+      error: (err) => {
         console.error('[ERROR] Failed to load reservations', err);
         this.toastr.error('Failed to load reservations');
-      }
+      },
     });
   }
 
@@ -142,14 +219,17 @@ export class CustomerReservationsComponent implements OnInit {
 
     if (this.searchTerm) {
       const search = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(reservation =>
-        reservation.customerName?.toLowerCase().includes(search) ||
-        reservation.roomNumber?.toString().includes(search)
+      filtered = filtered.filter(
+        (reservation) =>
+          reservation.customerName?.toLowerCase().includes(search) ||
+          reservation.roomNumber?.toString().includes(search)
       );
     }
 
     if (this.currentFilter !== 'all') {
-      filtered = filtered.filter(reservation => reservation.status === this.currentFilter);
+      filtered = filtered.filter(
+        (reservation) => reservation.status === this.currentFilter
+      );
     }
 
     this.filteredReservations = filtered;
@@ -169,14 +249,33 @@ export class CustomerReservationsComponent implements OnInit {
       3: 'CheckedOut',
       4: 'Cancelled',
       5: 'NoShow',
-      0: 'Pending' // You can adjust this as needed
+      0: 'Pending', // You can adjust this as needed
     };
-    return typeof status === 'number' ? (statusMap[status] || 'unknown') : status;
+    return typeof status === 'number' ? statusMap[status] || 'unknown' : status;
   }
 
   isCheckoutDue(checkOutDate: string): boolean {
     return new Date(checkOutDate) <= new Date();
   }
+
+  handleDuplicatePayment(reservationId: number) {
+    if (
+      !confirm(
+        'Are you sure you want to duplicate the payment for this NoShow reservation?'
+      )
+    ) {
+      return;
+    }
+
+    this.clerkService.duplicateNoShowBilling(reservationId).subscribe({
+      next: (res) => {
+        alert('No Show Updated successfully.');
+        this.loadReservations(); // refresh list
+      },
+      error: (err) => {
+        console.error('Failed to duplicate payment:', err);
+        alert('No Show Updated failed.');
+      },
+    });
+  }
 }
-
-

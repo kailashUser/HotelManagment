@@ -11,23 +11,56 @@ import { RouterModule, RouterOutlet } from '@angular/router';
       <nav class="sidebar bg-light border-end p-3" style="width: 220px;">
         <h5 class="mb-4">Clerk Panel</h5>
         <ul class="nav flex-column">
-        <li class="nav-item mb-2">
-            <a class="nav-link" routerLink="/clerk/check-in" routerLinkActive="active">Check-in</a>
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link"
+              routerLink="/clerk/check-in"
+              routerLinkActive="active"
+              >Check-in</a
+            >
           </li>
-        <li class="nav-item mb-2">
-            <a class="nav-link" routerLink="/clerk/check-out" routerLinkActive="active">Check-Out</a>
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link"
+              routerLink="/clerk/check-out"
+              routerLinkActive="active"
+              >Check-Out</a
+            >
           </li>
-        <li class="nav-item mb-2">
-            <a class="nav-link" routerLink="/clerk/reservations/add" routerLinkActive="active">Add Reservation</a>
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link"
+              routerLink="/clerk/reservations/add"
+              routerLinkActive="active"
+              >Add Reservation</a
+            >
           </li>
 
           <li class="nav-item mb-2">
-            <a class="nav-link" routerLink="/clerk/customer-reservations" routerLinkActive="active">Customer Reservations</a>
-          </li>
-          <li class="nav-item mb-2">
-            <a class="nav-link" routerLink="/clerk/manage-room-states" routerLinkActive="active">Manage Room States</a>
+            <a
+              class="nav-link"
+              routerLink="/clerk/customer-reservations"
+              routerLinkActive="active"
+              >Customer Reservations</a
+            >
           </li>
 
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link"
+              routerLink="/clerk/manage-room-states"
+              routerLinkActive="active"
+              >Manage Room States</a
+            >
+          </li>
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link"
+              routerLink="/clerk/cancel-reservation"
+              routerLinkActive="active"
+              >7:00 PM Canceld</a
+            >
+          </li>
         </ul>
       </nav>
       <!-- Main Content -->
@@ -38,23 +71,23 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   `,
   styles: [
     `
-    .sidebar {
-      min-height: 100vh;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.03);
-    }
-    .nav-link {
-      color: #212529 !important;
-    }
-    .nav-link.active {
-      font-weight: bold;
-      color: #212529 !important;
-      background: #e7f1ff;
-      border-radius: 4px;
-    }
-    .main-content {
-      /* Optional: add padding or other styles specific to the main content area */
-    }
-    `
-  ]
+      .sidebar {
+        min-height: 100vh;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.03);
+      }
+      .nav-link {
+        color: #212529 !important;
+      }
+      .nav-link.active {
+        font-weight: bold;
+        color: #212529 !important;
+        background: #e7f1ff;
+        border-radius: 4px;
+      }
+      .main-content {
+        /* Optional: add padding or other styles specific to the main content area */
+      }
+    `,
+  ],
 })
-export class ClerkLayoutComponent { }
+export class ClerkLayoutComponent {}

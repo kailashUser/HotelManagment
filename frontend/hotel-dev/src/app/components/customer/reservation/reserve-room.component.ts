@@ -76,22 +76,35 @@ export class ReserveRoomComponent implements OnInit {
   }
 
   confirmReservation(): void {
-    console.log(this.room);
-    if (!this.room || !this.checkInDate || !this.checkOutDate) {
-      alert('Please fill in all required fields.');
+    if (!this.room) {
+      this.toastr.error('Room details not loaded.');
       return;
     }
-
+    if (!this.checkInDate || !this.checkOutDate) {
+      this.toastr.error('Please fill in all required fields.');
+      return;
+    }
     const checkIn = new Date(this.checkInDate);
     const checkOut = new Date(this.checkOutDate);
-    const nights =
-      (checkOut.getTime() - checkIn.getTime()) / (1000 * 3600 * 24);
-
-    if (nights <= 0) {
-      alert('Check-out date must be after check-in date.');
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (isNaN(checkIn.getTime()) || isNaN(checkOut.getTime())) {
+      this.toastr.error('Please enter valid dates.');
       return;
     }
-
+    if (checkIn < today) {
+      this.toastr.error('Check-in date must be today or in the future.');
+      return;
+    }
+    if (checkOut <= checkIn) {
+      this.toastr.error('Check-out date must be after check-in date.');
+      return;
+    }
+    if (!this.room.available) {
+      this.toastr.error('This room is not available for reservation.');
+      return;
+    }
+    const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 3600 * 24));
     const reservation: CreateReservationDto = {
       customerId: this.customerId,
       roomId: this.room.id,
@@ -103,26 +116,22 @@ export class ReserveRoomComponent implements OnInit {
       specialRequests: this.specialRequests,
       createdAt: new Date().toISOString(),
     };
-
     this.reservationService.createReservation(reservation).subscribe({
       next: () => {
         const modalRef = this.modalService.open(ConfirmationModalComponent, {
           centered: true,
           backdrop: 'static',
         });
-
-        modalRef.componentInstance.title = '';
-        modalRef.componentInstance.message = `
-
-    `;
-
+        modalRef.componentInstance.title = 'Reservation Successful!';
+        modalRef.componentInstance.message = `Your reservation for ${this.room?.name} is confirmed from ${this.checkInDate} to ${this.checkOutDate}.`;
         modalRef.result.then(() => {
           this.router.navigate(['/customer/my-reservations']);
         });
+        this.toastr.success('Reservation created successfully!');
       },
       error: (err) => {
         console.error('Reservation failed:', err);
-        alert(err?.error?.message || 'Reservation failed');
+        this.toastr.error(err?.error?.message || 'Reservation failed');
       },
     });
   }

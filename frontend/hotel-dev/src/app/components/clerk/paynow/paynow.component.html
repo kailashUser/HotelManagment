@@ -22,6 +22,7 @@
           value="cash"
           [(ngModel)]="paymentMethod"
           autocomplete="off"
+          [disabled]="isLoading"
         />
         <label class="btn btn-outline-success" for="pay-cash">
           <i class="bi bi-cash-coin"></i> Cash
@@ -34,6 +35,7 @@
           value="card"
           [(ngModel)]="paymentMethod"
           autocomplete="off"
+          [disabled]="isLoading"
         />
         <label class="btn btn-outline-primary" for="pay-card">
           <i class="bi bi-credit-card"></i> Card
@@ -47,7 +49,8 @@
           type="text"
           class="form-control"
           [(ngModel)]="cardNumber"
-          placeholder="1234 5678 9012 3456 "
+          placeholder="1234 5678 9012 3456"
+          [disabled]="isLoading"
         />
       </div>
       <div class="mb-3">
@@ -57,6 +60,7 @@
           class="form-control"
           [(ngModel)]="cardHolder"
           placeholder="(e.g. Alice Smith)"
+          [disabled]="isLoading"
         />
       </div>
       <div class="row">
@@ -67,6 +71,7 @@
             class="form-control"
             [(ngModel)]="cardExpiry"
             placeholder="(e.g. 12/25)"
+            [disabled]="isLoading"
           />
         </div>
         <div class="col-6">
@@ -76,17 +81,27 @@
             class="form-control"
             [(ngModel)]="cardCvc"
             placeholder="(e.g. 123)"
+            [disabled]="isLoading"
           />
         </div>
       </div>
     </div>
     <button
-      routerLink="['/customer-reservations']"
-      routerLinkActive="router-link-active"
       class="btn btn-primary w-100 mt-4"
       (click)="completePayment()"
+      [disabled]="isLoading"
     >
-      Complete Payment
+      <span *ngIf="!isLoading">
+        <i class="bi bi-credit-card me-2"></i>Complete Payment
+      </span>
+      <span *ngIf="isLoading">
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        Processing Payment...
+      </span>
     </button>
   </div>
 </div>

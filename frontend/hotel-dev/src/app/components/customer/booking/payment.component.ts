@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { ToastrService } from 'ngx-toastr';
-import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { BillingService } from '../../../services/billing.service';
+import { CustomerService } from '../../../services/customer.service';
 
 interface PaymentForm {
   cardNumber: string;
@@ -48,8 +49,10 @@ export class PaymentComponent implements OnInit {
   constructor(
     private router: Router,
     private toastr: ToastrService,
-    private modalService: NgbModal
-  ) { }
+    private customerService: CustomerService,
+    private billingService: BillingService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     const state = history.state as BookingState;
@@ -68,73 +71,141 @@ export class PaymentComponent implements OnInit {
   }
 
   // onSubmit(): void {
-  //   this.processing = true; // Disable button and show processing state
-  //   console.log('Payment submitted:', this.payment);
+  //   this.processing = true;
 
-  //   // Simulate payment processing result (replace with actual logic)
-  //   const paymentSuccessful = Math.random() > 0.5; // Simulate success/failure
+  //   const state = history.state as any;
+  //   let reservationId = state.reservationId;
+  //   if (!reservationId) {
+  //     reservationId = this.route.snapshot.queryParamMap.get('reservationId');
+  //   }
 
-  //   setTimeout(() => {
-  //     this.processing = false; // Re-enable button or handle state change
-  //     if (paymentSuccessful) {
-  //       this.paymentSuccessful = true; // Set success state for template message
-  //       this.toastr.success('Payment successful!', 'Success');
-  //       console.log('Payment successful!'); // Placeholder
+  //   if (!reservationId) {
+  //     this.toastr.error('Reservation ID not found');
+  //     this.processing = false;
+  //     return;
+  //   }
 
-  //       // Navigate after a short delay
-  //       setTimeout(() => {
-  //         this.router.navigate(['/customer/my-reservations']);
-  //       }, 1500);
+  //   this.billingService.getBillings().subscribe((response) => {
+  //     const billings = response.data;
+  //     const billing = billings.find((b) => b.reservationId === +reservationId);
 
-  //     } else {
-  //       this.toastr.error('Payment failed. Please try again.', 'Error');
-  //       console.error('Payment failed.'); // Placeholder
-
-  //       // Optional: Stay on the page or navigate to an error page
-  //       // For now, we'll just show the error toast and stay on the page.
+  //     if (!billing || typeof billing.id !== 'number') {
+  //       this.toastr.error('Billing not found or invalid.');
+  //       this.processing = false;
+  //       return;
   //     }
-  //   }, 2000); // Simulate processing delay
+
+  //     // Construct payment details
+  //     const paymentDetails: PaymentDetails = {
+  //       amount: this.payment.amount,
+  //       cardNumber: this.payment.cardNumber,
+  //       cardHolderName: this.payment.cardHolder,
+  //       expiryDate: this.payment.expiryDate,
+  //       cvv: this.payment.cvv,
+  //     };
+
+  //     this.customerService.makePayment(billing.id, paymentDetails).subscribe({
+  //       next: () => {
+  //         this.customerService.getReservationById(+reservationId).subscribe({
+  //           next: (reservation) => {
+  //             const updatedReservation = {
+  //               ...reservation,
+  //               status: 1,
+  //             };
+
+  //             this.customerService.updateReservation(updatedReservation).subscribe({
+  //               next: () => {
+  //                 this.processing = false;
+  //                 this.paymentSuccessful = true;
+  //                 this.toastr.success('Payment successful and reservation updated!');
+  //                 setTimeout(() => {
+  //                   this.router.navigate(['/customer/my-reservations']);
+  //                 }, 1500);
+  //               },
+  //               error: () => {
+  //                 this.toastr.error('Failed to update reservation status');
+  //                 this.processing = false;
+  //               },
+  //             });
+  //           },
+  //           error: () => {
+  //             this.toastr.error('Failed to fetch reservation');
+  //             this.processing = false;
+  //           },
+  //         });
+  //       },
+  //       error: () => {
+  //         this.toastr.error('Payment failed');
+  //         this.processing = false;
+  //       },
+  //     });
+  //   });
   // }
 
   onSubmit(): void {
-    this.processing = true; // Disable button
-    console.log('Payment submitted:', this.payment);
+    this.processing = true;
 
-    // const paymentSuccessful = Math.random() > 0.5; // Simulated result
+    const state = history.state as any;
+    let reservationId = state.reservationId;
+    if (!reservationId) {
+      reservationId = this.route.snapshot.queryParamMap.get('reservationId');
+    }
 
-    setTimeout(() => {
+    if (!reservationId) {
+      this.toastr.error('Reservation ID not found');
       this.processing = false;
+      return;
+    }
 
-      // if (paymentSuccessful) {
-      this.paymentSuccessful = true;
+    this.billingService.getBillings().subscribe((response) => {
+      const billings = response.data;
+      const billing = billings.find((b) => b.reservationId === +reservationId);
 
-      // ✅ Log payment success details
-      console.log('Booking successful! Details:', this.payment);
+      if (!billing || typeof billing.id !== 'number') {
+        this.toastr.error('Billing not found or invalid.');
+        this.processing = false;
+        return;
+      }
 
-      // ✅ Show confirmation modal
-      const modalRef = this.modalService.open(ConfirmationModalComponent, {
-        centered: true,
-        backdrop: 'static',
+      console.log(billings, 'billings');
+
+      // Prepare payment payload matching backend structure
+      const now = new Date().toISOString();
+      const paymentDetails = {
+        Id: 0,
+        BillingId: billing.id,
+        Amount: this.payment.amount,
+        Method: 0, // 0 = Card (match your backend enum)
+        Status: 0, // 0 = Pending (match your backend enum)
+        TransactionId: Math.random()
+          .toString(36)
+          .substring(2, 10)
+          .toUpperCase(),
+        CardNumber: this.payment.cardNumber.slice(-4), // only last 4 digits
+        CardHolderName: this.payment.cardHolder,
+        CardExpiryDate: this.payment.expiryDate,
+        CreatedAt: now,
+        UpdatedAt: now,
+        ProcessedAt: now,
+      };
+
+      console.log(paymentDetails, 'paymentDetails');
+
+      this.customerService.makePayment(paymentDetails).subscribe({
+        next: () => {
+          this.processing = false;
+          this.paymentSuccessful = true;
+          this.toastr.success('Payment successful and reservation updated!');
+          setTimeout(() => {
+            this.router.navigate(['/customer/my-reservations']);
+          }, 1500);
+        },
+        error: () => {
+          this.toastr.error('Payment failed');
+          this.processing = false;
+        },
       });
-
-      modalRef.componentInstance.title = '💳 Booking Successful!';
-      modalRef.componentInstance.message = `
-        <p>Payment Details Added Successfully</p>
-        <p><strong>Thank you</strong> for your reservation!</p>
-        <p>You will be redirected shortly.</p>
-      `;
-
-      // ✅ Navigate after modal is closed
-      modalRef.result.then(() => {
-        this.router.navigate(['/customer/my-reservations']);
-      });
-      // }
-      //  else {
-      //   // ❌ Payment failed
-      //   this.toastr.error('Payment failed. Please try again.', 'Error');
-      //   console.error('Payment failed.');
-      // }
-    }, 2000); // Simulated delay
+    });
   }
 
   onCancel(): void {

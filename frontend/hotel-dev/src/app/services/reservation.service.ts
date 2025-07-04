@@ -22,7 +22,7 @@ export interface CreateReservationDto {
 export class ReservationService {
   private apiUrl = `${environment.apiUrl}/Reservation`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   createReservation(data: CreateReservationDto): Observable<any> {
     const token = localStorage.getItem('token') || '';
@@ -58,7 +58,6 @@ export class ReservationService {
       );
   }
 
-
   getAllReservationsWithCustID(customerId: number): Observable<Reservation[]> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -66,7 +65,7 @@ export class ReservationService {
       Accept: '*/*',
     });
 
-    const url = `${this.apiUrl}/by-customer/${customerId}`;
+    const url = `${this.apiUrl}/with-customer/${customerId}`;
 
     return this.http
       .get<{ success: boolean; data: any[] }>(url, { headers })
@@ -75,7 +74,9 @@ export class ReservationService {
           res.data.map((r) => ({
             id: r.id,
             CustomerId: r.customerId, // ✅ Fix casing here
-            roomName: r.room?.roomNumber ? `Room ${r.room.roomNumber}` : `Room ${r.roomId}`,
+            roomName: r.room?.roomNumber
+              ? `Room ${r.room.roomNumber}`
+              : `Room ${r.roomId}`,
             checkIn: r.checkInDate,
             checkOut: r.checkOutDate,
             status: this.mapStatus(r.status), // should return 'ongoing' | 'pending' | 'completed'
@@ -85,19 +86,20 @@ export class ReservationService {
         )
       );
   }
+  private mapStatus(status: string | number): string {
+    const statusMap: Record<number, string> = {
+      0: 'Pending',
+      1: 'Confirmed',
+      2: 'CheckedIn',
+      3: 'CheckedOut',
+      4: 'Cancelled',
+      5: 'NoShow',
+    };
 
+    const normalized =
+      typeof status === 'string' ? parseInt(status.trim(), 10) : status;
 
-  private mapStatus(code: number): 'pending' | 'completed' | 'ongoing' {
-    switch (code) {
-      case 0:
-        return 'pending';
-      case 1:
-        return 'completed';
-      case 2:
-        return 'ongoing';
-      default:
-        return 'pending';
-    }
+    return statusMap[normalized] || 'Unknown';
   }
 
   cancelReservation(id: number): Observable<any> {
@@ -107,5 +109,14 @@ export class ReservationService {
     });
 
     return this.http.patch(`${this.apiUrl}/${id}/cancel`, {}, { headers });
+  }
+
+  autocancel(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.patch(`${this.apiUrl}/autocancel`, {}, { headers });
   }
 }

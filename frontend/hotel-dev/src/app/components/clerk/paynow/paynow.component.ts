@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { Router, RouterLink } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Reservation } from '../../../interfaces/reservation.interface';
 import { ClerkService } from '../../../services/clerk.service';
@@ -10,8 +11,8 @@ import { ClerkService } from '../../../services/clerk.service';
 @Component({
   selector: 'app-paynow',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, RouterLink],
-  templateUrl: './paynow.component.html'
+  imports: [CommonModule, FormsModule, MatDialogModule],
+  templateUrl: './paynow.component.html',
 })
 export class PaynowComponent {
   totalAmount = 0;
@@ -23,16 +24,15 @@ export class PaynowComponent {
   isLoading = false;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { reservation: Reservation; billing: any },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { reservation: Reservation; billing: any },
     private clerkService: ClerkService,
     private toastr: ToastrService,
-    private router: Router,
-    private dialogRef: MatDialogRef<PaynowComponent>
+    private router: Router
   ) {
     console.log('PaynowComponent initialized with data:', data);
     console.log('billing', data.billing);
     this.totalAmount = data.billing.finalAmount;
-
   }
 
   completePayment() {
@@ -40,18 +40,22 @@ export class PaynowComponent {
 
     if (isCard) {
       if (!this.cardNumber || !this.cardHolder || !this.cardExpiry) {
-        alert('Please fill in all card details.');
+        this.toastr.error('Please fill in all card details.');
         return;
       }
 
       if (this.cardNumber.length < 4) {
-        alert('Card number seems too short.');
+        this.toastr.error('Card number seems too short.');
         return;
       }
     }
 
-    if (!this.data.billing || !this.data.billing.id || this.data.billing.id <= 0) {
-      alert('Invalid billing ID. Cannot process payment.');
+    if (
+      !this.data.billing ||
+      !this.data.billing.id ||
+      this.data.billing.id <= 0
+    ) {
+      this.toastr.error('Invalid billing ID. Cannot process payment.');
       console.error('Invalid billing:', this.data.billing);
       return;
     }
@@ -64,71 +68,77 @@ export class PaynowComponent {
       transactionId: isCard ? 'TXN-' + Date.now() : '',
       cardNumber: isCard ? this.cardNumber.slice(-4) : '',
       cardHolderName: isCard ? this.cardHolder : '',
-      cardExpiryDate: isCard ? this.cardExpiry : ''
+      cardExpiryDate: isCard ? this.cardExpiry : '',
     };
-
-
 
     console.log('Submitting payment data:', paymentData);
 
     this.isLoading = true;
     this.clerkService.postPayment(paymentData).subscribe({
-      next: () => {
+      next: (response) => {
         this.toastr.success('Payment completed successfully');
-        this.router.navigate(['customer-reservations']);
 
+        // Update reservation status to 3 (completed) after successful payment
+        this.completeCheckout();
+
+        // Navigate after a short delay to show success message
         setTimeout(() => {
-          this.comepleteCheckout()
-        }, 3000);
-
+          this.router.navigate(['/clerk/customer-reservations']);
+        }, 2000);
       },
       error: (err) => {
-        alert('Payment failed. Please try again.');
+        this.toastr.error('Payment failed. Please try again.');
         console.error('Payment error:', err);
         this.isLoading = false;
-      }
+      },
     });
   }
 
-
-  comepleteCheckout() {
+  completeCheckout() {
     if (!this.data.reservation) {
       console.error('No reservation data available');
+      this.toastr.error('Reservation data not found');
       return;
     }
 
     const res = this.data.reservation;
 
     const reservationData = {
-      id: 0,
+      id: res.id, // Use the actual reservation ID instead of 0
       customerId: res.customerId,
       roomId: res.roomId,
       checkInDate: res.checkInDate || new Date().toISOString(),
-      checkOutDate: res.checkOutDate || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      checkOutDate:
+        res.checkOutDate ||
+        new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
       actualCheckIn: res.actualCheckIn || new Date().toISOString(),
-      status: 3,
+      actualCheckOut: new Date().toISOString(), // Set actual checkout time
+      status: 3, // Change status to 3 (completed)
       totalAmount: res.totalAmount || 0,
       depositAmount: res.depositAmount || 0,
       specialRequests: res.specialRequests || '',
-      customerName: res.customerName,
-      roomName: res.roomName || '',
     };
 
-    console.log('Mapped reservation data:', reservationData);
+    console.log('Updating reservation status to completed:', reservationData);
 
     this.clerkService.updateCheckout(reservationData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.toastr.success(response.message || 'Status updated successfully');
+          this.toastr.success('Reservation completed successfully');
+          console.log('Reservation status updated successfully:', response);
         } else {
-          this.toastr.error(response.message || 'Status update failed');
+          this.toastr.error(
+            response.message || 'Failed to update reservation status'
+          );
+          console.error('Status update failed:', response);
         }
       },
       error: (err) => {
-        this.toastr.error('An error occurred during status update');
-        console.error(err);
-      }
+        this.toastr.error(
+          'An error occurred while updating reservation status'
+        );
+        console.error('Status update error:', err);
+      },
     });
-
   }
 }

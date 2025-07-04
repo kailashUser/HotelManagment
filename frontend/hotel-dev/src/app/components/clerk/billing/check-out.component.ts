@@ -42,12 +42,12 @@ export class CheckOutComponent implements OnInit {
         // Handle API response shape: { data: [...] }
         const billingArray = Array.isArray(billings) ? billings : (billings as any).data;
         if (!Array.isArray(billingArray)) {
-          alert('Failed to fetch billing data.');
+          console.error('Failed to fetch billing data.');
           return;
         }
         const billing = billingArray.find(b => b.reservationId === reservation.id);
         if (!billing) {
-          alert('No billing found for this reservation. Cannot proceed to payment.');
+          console.error('No billing found for this reservation. Cannot proceed to payment.');
           return;
         }
         console.log('Billing found for reservation:', reservation.id, 'Billing ID:', billing.id);
@@ -61,8 +61,7 @@ export class CheckOutComponent implements OnInit {
         });
       },
       error: (err) => {
-        alert('Failed to fetch billing information.');
-        console.error('Billing fetch error:', err);
+        console.error('Failed to fetch billing information:', err);
       }
     });
   }
