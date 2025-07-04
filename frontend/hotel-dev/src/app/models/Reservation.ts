@@ -4,7 +4,7 @@ export interface Reservation {
   roomName: string;
   checkIn: string;
   checkOut: string;
-  status: 'ongoing' | 'pending' | 'completed';
+  status: string;
   totalPrice: number;
   guests: number;
 }

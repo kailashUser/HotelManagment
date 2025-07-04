@@ -28,16 +28,53 @@ namespace HotelReservation.Repositories
             return await conn.QueryFirstOrDefaultAsync<Billing>(sql, new { Id = id });
         }
 
+        //public async Task<int> CreateAsync(Billing billing)
+        //{
+        //    var sql = @"INSERT INTO Billings 
+        //        (ReservationId, TotalAmount, Tax, Discount, RoomCharges, AdditionalCharges, FinalAmount, Status, CreatedAt)
+        //        VALUES 
+        //        (@ReservationId, @TotalAmount, @Tax, @Discount, @RoomCharges, @AdditionalCharges, @FinalAmount, @Status, @CreatedAt);
+        //        SELECT CAST(SCOPE_IDENTITY() as int);";
+
+        //    using var conn = _context.CreateConnection();
+        //    return await conn.ExecuteScalarAsync<int>(sql, billing);
+        //}
+
+
         public async Task<int> CreateAsync(Billing billing)
         {
-            var sql = @"INSERT INTO Billings 
-                (ReservationId, TotalAmount, Tax, Discount, RoomCharges, AdditionalCharges, FinalAmount, Status, CreatedAt)
-                VALUES 
-                (@ReservationId, @TotalAmount, @Tax, @Discount, @RoomCharges, @AdditionalCharges, @FinalAmount, @Status, @CreatedAt);
-                SELECT CAST(SCOPE_IDENTITY() as int);";
+            var insertSql = @"INSERT INTO Billings 
+        (ReservationId, TotalAmount, Tax, Discount, RoomCharges, AdditionalCharges, FinalAmount, Status, CreatedAt)
+        VALUES 
+        (@ReservationId, @TotalAmount, @Tax, @Discount, @RoomCharges, @AdditionalCharges, @FinalAmount, @Status, @CreatedAt);
+        SELECT CAST(SCOPE_IDENTITY() as int);";
+
+            var updateSql = @"UPDATE Reservations
+                      SET Status = 1
+                      WHERE Id = @ReservationId;"; // ✅ Correct column name is Id, not Reservations
 
             using var conn = _context.CreateConnection();
-            return await conn.ExecuteScalarAsync<int>(sql, billing);
+            conn.Open(); // manually open connection for transaction
+
+            using var transaction = conn.BeginTransaction();
+            try
+            {
+                // 1. Insert into Billings
+                var billingId = await conn.ExecuteScalarAsync<int>(insertSql, billing, transaction);
+
+                // 2. Update Reservation status
+                await conn.ExecuteAsync(updateSql, new { billing.ReservationId }, transaction);
+
+                // 3. Commit transaction
+                transaction.Commit();
+
+                return billingId;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task<bool> UpdateAsync(Billing billing)

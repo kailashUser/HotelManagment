@@ -1,0 +1,55 @@
+<div *ngIf="loading" class="text-center my-5">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div
+  *ngIf="!loading && checkedInReservations.length === 0"
+  class="alert alert-info text-center my-5"
+>
+  No checked-in guests.
+</div>
+<div *ngIf="!loading && checkedInReservations.length > 0" class="container">
+  <div class="row g-4">
+    <div
+      class="col-md-6 col-lg-4"
+      *ngFor="let reservation of checkedInReservations"
+    >
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Room: {{ reservation.roomName }}</h5>
+        </div>
+        <div class="card-body">
+          <h6 class="card-title">Guest: {{ reservation.customerName }}</h6>
+          <p class="mb-1">
+            <strong>Email:</strong> {{ reservation.customerEmail }}
+          </p>
+          <p class="mb-1">
+            <strong>Phone:</strong> {{ reservation.customerPhone }}
+          </p>
+          <p class="mb-1">
+            <strong>Check-in:</strong>
+            {{ reservation.checkInDate | date : "mediumDate" }}
+          </p>
+          <p class="mb-1">
+            <strong>Check-out:</strong>
+            {{ reservation.checkOutDate | date : "mediumDate" }}
+          </p>
+        </div>
+        <div
+          class="card-footer d-flex justify-content-between align-items-center bg-light"
+        >
+          <span class="fw-bold text-success">{{
+            reservation.totalAmount | currency
+          }}</span>
+          <button
+            class="btn btn-outline-primary btn-sm"
+            (click)="selectReservation(reservation)"
+          >
+            <i class="bi bi-box-arrow-right"></i> Check Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

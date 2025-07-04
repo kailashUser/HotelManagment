@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Reservation } from '../models/Reservation';
@@ -58,17 +58,48 @@ export class ReservationService {
       );
   }
 
-  private mapStatus(code: number): 'pending' | 'completed' | 'ongoing' {
-    switch (code) {
-      case 0:
-        return 'pending';
-      case 1:
-        return 'completed';
-      case 2:
-        return 'ongoing';
-      default:
-        return 'pending';
-    }
+  getAllReservationsWithCustID(customerId: number): Observable<Reservation[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      Accept: '*/*',
+    });
+
+    const url = `${this.apiUrl}/with-customer/${customerId}`;
+
+    return this.http
+      .get<{ success: boolean; data: any[] }>(url, { headers })
+      .pipe(
+        map((res) =>
+          res.data.map((r) => ({
+            id: r.id,
+            CustomerId: r.customerId, // ✅ Fix casing here
+            roomName: r.room?.roomNumber
+              ? `Room ${r.room.roomNumber}`
+              : `Room ${r.roomId}`,
+            checkIn: r.checkInDate,
+            checkOut: r.checkOutDate,
+            status: this.mapStatus(r.status), // should return 'ongoing' | 'pending' | 'completed'
+            totalPrice: r.totalAmount,
+            guests: r.numberOfGuests ?? 1,
+          }))
+        )
+      );
+  }
+  private mapStatus(status: string | number): string {
+    const statusMap: Record<number, string> = {
+      0: 'Pending',
+      1: 'Confirmed',
+      2: 'CheckedIn',
+      3: 'CheckedOut',
+      4: 'Cancelled',
+      5: 'NoShow',
+    };
+
+    const normalized =
+      typeof status === 'string' ? parseInt(status.trim(), 10) : status;
+
+    return statusMap[normalized] || 'Unknown';
   }
 
   cancelReservation(id: number): Observable<any> {
@@ -78,5 +109,14 @@ export class ReservationService {
     });
 
     return this.http.patch(`${this.apiUrl}/${id}/cancel`, {}, { headers });
+  }
+
+  autocancel(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.patch(`${this.apiUrl}/autocancel`, {}, { headers });
   }
 }

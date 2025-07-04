@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Reservation } from '../../../interfaces/reservation.interface';
 import {
   BillingService,
   CreateBillingDto,
 } from '../../../services/billing.service';
+import { CustomerService } from '../../../services/customer.service';
 
 interface BookingForm {
   roomId: number;
@@ -35,18 +37,19 @@ export class BookingFormComponent implements OnInit {
     paymentMethod: 'credit',
   };
 
-  public roomPrice: number = 150; // Will be updated from actual room data
+  public roomPrice: number = 150;
   public resId: number = 0;
   constructor(
     private router: Router,
     private billingService: BillingService,
+    private customerService: CustomerService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     const navState = history.state;
     if (navState && navState.roomId && navState.roomPrice) {
-      this.booking.roomId = navState.navigationId;
+      this.booking.roomId = navState.roomId;
       this.roomPrice = navState.roomPrice;
     }
 
@@ -82,12 +85,12 @@ export class BookingFormComponent implements OnInit {
 
   public onSubmit() {
     console.log('Booking submitted:', this.booking);
-    const CustomerId = Number(localStorage.getItem('customerId')); // Assumes it's stored in localStorage
-    const ReservationId = this.resId; // Or pass from navigation state if needed
-    console.log(this.resId);
+    const customerId = Number(localStorage.getItem('customerId'));
+    const reservationId = this.resId; // Make sure this is already set
+
     const billing: CreateBillingDto = {
-      ReservationId,
-      CustomerId,
+      reservationId: reservationId,
+      customerId: customerId,
       totalAmount: this.total,
       tax: this.tax,
       discount: 0,
@@ -95,13 +98,18 @@ export class BookingFormComponent implements OnInit {
       additionalCharges: 0,
       finalAmount: this.total,
       status: 0, // Pending
-      createdAt: new Date().toISOString(),
     };
+
+    console.log('Billing data being sent:', billing);
 
     this.billingService.createBilling(billing).subscribe({
       next: () => {
-        this.router.navigate(['/customer/payment'], {
-          state: { booking: this.booking, total: this.total },
+        this.router.navigate([`/customer/payment/${this.resId}`], {
+          state: {
+            booking: this.booking,
+            total: this.total,
+            reservationId: this.resId,
+          },
         });
       },
       error: (err) => {
@@ -110,4 +118,75 @@ export class BookingFormComponent implements OnInit {
       },
     });
   }
+
+  // public onSubmit() {
+  //   console.log('Booking submitted:', this.booking);
+  //   const CustomerId = Number(localStorage.getItem('customerId'));
+  //   // Create reservation first
+  //   const reservationData = {
+  //     customerId: CustomerId,
+  //     roomId: this.booking.roomId,
+  //     checkInDate: this.booking.checkIn,
+  //     checkOutDate: this.booking.checkOut,
+  //     guests: this.booking.guests,
+  //     specialRequests: this.booking.specialRequests,
+  //     addOns: {
+  //       breakfast: false,
+  //       wifi: false,
+  //       parking: false
+  //     }
+  //   };
+  //   console.log('Reservation data being sent:', reservationData);
+  //   this.customerService.createReservation(reservationData).subscribe({
+  //     next: (reservation) => {
+  //       const billing: CreateBillingDto = {
+  //         reservationId: reservation.id,
+  //         customerId: CustomerId,
+  //         totalAmount: this.total,
+  //         tax: this.tax,
+  //         discount: 0,
+  //         roomCharges: this.subtotal,
+  //         additionalCharges: 0,
+  //         finalAmount: this.total,
+  //         status: 0, // Pending
+  //       };
+  //       this.billingService.createBilling(billing).subscribe({
+  //         next: () => {
+  //           // Fetch the full reservation before updating
+  //           this.customerService.getReservationById(reservation.id).subscribe({
+  //             next: (fullReservation) => {
+  //               const updatedReservation: Reservation = {
+  //                 ...fullReservation,
+  //                 status: 1
+  //               };
+  //               this.customerService.updateReservationById(updatedReservation).subscribe({
+  //                 next: () => {
+  //                   this.router.navigate(['/customer/payment'], {
+  //                     state: { booking: this.booking, total: this.total, reservationId: reservation.id },
+  //                   });
+  //                 },
+  //                 error: (err) => {
+  //                   console.error('Failed to update reservation status:', err);
+  //                   alert('Failed to update reservation status.');
+  //                 }
+  //               });
+  //             },
+  //             error: (err) => {
+  //               console.error('Failed to fetch full reservation:', err);
+  //               alert('Failed to fetch full reservation.');
+  //             }
+  //           });
+  //         },
+  //         error: (err) => {
+  //           console.error('Billing creation failed:', err);
+  //           alert('Failed to create billing.');
+  //         },
+  //       });
+  //     },
+  //     error: (err) => {
+  //       console.error('Reservation creation failed:', err);
+  //       alert('Failed to create reservation.');
+  //     }
+  //   });
+  // }
 }

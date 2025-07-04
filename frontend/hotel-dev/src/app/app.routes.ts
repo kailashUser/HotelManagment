@@ -1,54 +1,58 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { LandingComponent } from './components/landing/landing.component';
 import { AboutComponent } from './components/about/about.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { ServicesComponent} from './components/home-services/services.component';
+import { ServicesComponent } from './components/home-services/services.component';
+import { LandingComponent } from './components/landing/landing.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
-import { RoomBrowseComponent } from './components/room-browse/room-browse.component';
-import { ManagerLayoutComponent } from './components/manager/shared/manager-layout.component';
-import { CustomerComponent } from './components/customer/customer.component';
 import { BookRoomsComponent } from './components/customer/book-rooms/book-rooms.component';
-import { ProfileComponent as CustomerProfileComponent } from './components/customer/profile/profile.component';
-import { ProfileComponent as ManagerProfileComponent } from './components/manager/profile/profile.component';
-import { MyReservationsComponent } from './components/customer/reservation/my-reservations.component';
 import { BookingFormComponent } from './components/customer/booking/booking-form.component';
 import { PaymentComponent } from './components/customer/booking/payment.component';
+import { CustomerComponent } from './components/customer/customer.component';
+import { ProfileComponent as CustomerProfileComponent } from './components/customer/profile/profile.component';
+import { MyReservationsComponent } from './components/customer/reservation/my-reservations.component';
 import { ReserveRoomComponent } from './components/customer/reservation/reserve-room.component';
+import { ProfileComponent as ManagerProfileComponent } from './components/manager/profile/profile.component';
+import { ManagerLayoutComponent } from './components/manager/shared/manager-layout.component';
+import { RoomBrowseComponent } from './components/room-browse/room-browse.component';
 
 // Import Manager Staff Components
-import { StaffListComponent } from './components/manager/manage-staff/staff-list.component';
 import { AddStaffComponent } from './components/manager/manage-staff/add-staff.component';
 import { EditStaffComponent } from './components/manager/manage-staff/edit-staff.component';
+import { StaffListComponent } from './components/manager/manage-staff/staff-list.component';
 
 // Import Manager Room Components
-import { RoomListComponent as ManagerRoomListComponent } from './components/manager/manage-rooms/room-list.component';
 import { AddRoomComponent as ManagerAddRoomComponent } from './components/manager/manage-rooms/add-room.component';
 import { EditRoomComponent as ManagerEditRoomComponent } from './components/manager/manage-rooms/edit-room.component';
+import { RoomListComponent as ManagerRoomListComponent } from './components/manager/manage-rooms/room-list.component';
 
 // Import Manager Revenue Components
 import { RevenueDashboardComponent } from './components/manager/revenues/revenue-dashboard.component';
 
 // Import Clerk Components
-import { ClerkLayoutComponent } from './components/clerk/shared/clerk-layout.component';
-import { ProfileComponent as ClerkProfileComponent } from './components/clerk/profile/profile.component';
-import { RoomStatusComponent } from './components/clerk/room-status/room-status.component';
-import { AddReservationComponent } from './components/clerk/reservations/add-reservation.component';
+
+import { CheckInComponent } from './components/clerk/check-in.component';
 import { CheckOutComponent } from './components/clerk/billing/check-out.component';
-import { BillSummaryComponent } from './components/clerk/billing/bill-summary.component';
-import { ReservationFormComponent } from './components/clerk/reservations/reservation-form.component';
+import { ProfileComponent as ClerkProfileComponent } from './components/clerk/profile/profile.component';
+import { AddReservationComponent } from './components/clerk/reservations/add-reservation.component';
 import { CustomerReservationsComponent } from './components/clerk/reservations/customer-reservations.component';
+import { ReservationFormComponent } from './components/clerk/reservations/reservation-form.component';
+import { RoomStatusComponent } from './components/clerk/room-status/room-status.component';
+import { ClerkLayoutComponent } from './components/clerk/shared/clerk-layout.component';
+import { ReservationAutomaticCanelComponent } from './components/clerk/reservation-automatic-canel/reservation-automatic-canel.component';
+import { NoShowBillsComponent } from './components/clerk/no-show-bills/no-show-bills.component';
+import { AllBillsComponent } from './components/clerk/all-bills/all-bills.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'about', component: AboutComponent },
-   { path: 'service', component: ServicesComponent },
+  { path: 'service', component: ServicesComponent },
   { path: 'contact', component: ContactComponent },
-
   { path: 'rooms', component: RoomBrowseComponent },
+
   {
     path: 'manager',
     component: ManagerLayoutComponent,
@@ -61,8 +65,8 @@ export const routes: Routes = [
       { path: 'add-room', component: ManagerAddRoomComponent },
       { path: 'edit-room/:id', component: ManagerEditRoomComponent },
       { path: 'revenues', component: RevenueDashboardComponent },
-      { path: '', redirectTo: 'profile', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+    ],
   },
   {
     path: 'clerk',
@@ -70,12 +74,22 @@ export const routes: Routes = [
     children: [
       { path: 'profile', component: ClerkProfileComponent },
       { path: 'manage-room-states', component: RoomStatusComponent },
-      { path: 'customer-reservations', component: CustomerReservationsComponent },
-      { path: 'check-out', component: CheckOutComponent },
-      { path: 'billing/summary', component: BillSummaryComponent },
+      { path: 'noshow-bills', component: NoShowBillsComponent },
+      { path: 'all-bills', component: AllBillsComponent },
+      {
+        path: 'cancel-reservation',
+        component: ReservationAutomaticCanelComponent,
+      },
+      {
+        path: 'customer-reservations',
+        component: CustomerReservationsComponent,
+      },
+      { path: 'reservations/add', component: AddReservationComponent },
+      { path: 'check-in', component: CheckInComponent },
       { path: 'reservations/new', component: ReservationFormComponent },
-      { path: '', redirectTo: 'manage-room-states', pathMatch: 'full' }
-    ]
+      { path: 'check-out', component: CheckOutComponent },
+      { path: '', redirectTo: 'manage-room-states', pathMatch: 'full' },
+    ],
   },
   {
     path: 'customer',
@@ -84,11 +98,10 @@ export const routes: Routes = [
       { path: 'book-rooms', component: BookRoomsComponent },
       { path: 'profile', component: CustomerProfileComponent },
       { path: 'my-reservations', component: MyReservationsComponent },
-      { path: 'booking/:roomId', component: BookingFormComponent },
-      { path: 'payment', component: PaymentComponent },
+      { path: 'booking/:id', component: BookingFormComponent },
+      { path: 'payment/:id', component: PaymentComponent },
       { path: 'reserve/:id', component: ReserveRoomComponent },
-      { path: '', redirectTo: 'book-rooms', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'book-rooms', pathMatch: 'full' },
+    ],
   },
-  { path: '**', redirectTo: '' }
 ];

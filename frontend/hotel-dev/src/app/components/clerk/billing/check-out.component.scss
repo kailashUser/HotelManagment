@@ -1,0 +1,12 @@
+.reservation-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.reservation-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  width: 250px;
+  box-shadow: 2px 2px 8px #eee;
+}
