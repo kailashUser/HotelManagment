@@ -1,5 +1,6 @@
 ﻿using HotelReservation.Helpers;
 using HotelReservation.Interfaces;
+using HotelReservation.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,13 @@ namespace HotelReservation.Controllers
         {
             var result = await _repo.GetOccupancyRateAsync(from, to);
             return Ok(ApiResponse<decimal>.Ok(result));
+        }
+
+        [HttpGet("billing-report")]
+        public async Task<IActionResult> GetBillingReport()
+        {
+            var result = await _repo.GetBillingReportAsync();
+            return Ok(ApiResponse<IEnumerable<BillingReport>>.Ok(result));
         }
     }
 }

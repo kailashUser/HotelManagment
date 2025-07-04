@@ -9,5 +9,7 @@ namespace HotelReservation.Interfaces
         Task<int> CreateAsync(Payment payment);
         Task<bool> UpdateAsync(Payment payment);
         Task<bool> DeleteAsync(int id);
+
+        Task<bool> NoShowBilling(int ReservationID);
     }
 }

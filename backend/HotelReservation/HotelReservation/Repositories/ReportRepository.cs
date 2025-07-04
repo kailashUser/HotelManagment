@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using HotelReservation.Data;
 using HotelReservation.Interfaces;
+using HotelReservation.Models.Entities;
 
 namespace HotelReservation.Repositories
 {
@@ -59,6 +60,42 @@ namespace HotelReservation.Repositories
                         WHERE CheckInDate <= @end AND CheckOutDate >= @start AND Status IN (1, 2)";
             using var conn = _context.CreateConnection();
             return await conn.ExecuteScalarAsync<decimal>(sql, new { start, end });
+        }
+
+        public async Task<IEnumerable<BillingReport>> GetBillingReportAsync()
+        {
+            var sql = @"
+    SELECT
+        C.FirstName + ' ' + C.LastName AS CustomerName,
+        C.Email,
+        C.PhoneNumber,
+        Rm.RoomNumber,
+        Rm.Type AS RoomType,
+        Rm.BasePrice,
+        Res.CheckInDate,
+        Res.CheckOutDate,
+        DATEDIFF(DAY, Res.CheckInDate, Res.CheckOutDate) AS Nights,
+        Res.DepositAmount,
+        Res.Status AS ReservationStatus, -- ✅ Added this line
+        B.RoomCharges,
+        B.Tax,
+        B.Discount,
+        B.AdditionalCharges,
+        B.FinalAmount AS AmountDue,
+        P.Amount AS AmountPaid,
+        P.Method AS PaymentMethod,
+        P.Status AS PaymentStatus,
+        P.TransactionId,
+        P.ProcessedAt
+    FROM Billings B
+    JOIN Reservations Res ON B.ReservationId = Res.Id
+    JOIN Customers C ON Res.CustomerId = C.Id
+    JOIN Rooms Rm ON Res.RoomId = Rm.Id
+    LEFT JOIN Payments P ON P.BillingId = B.Id";
+
+            using var connection = _context.CreateConnection();
+            var result = await connection.QueryAsync<BillingReport>(sql);
+            return result;
         }
     }
 }
