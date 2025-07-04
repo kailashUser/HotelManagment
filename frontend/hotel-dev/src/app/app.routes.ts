@@ -41,6 +41,8 @@ import { ReservationFormComponent } from './components/clerk/reservations/reserv
 import { RoomStatusComponent } from './components/clerk/room-status/room-status.component';
 import { ClerkLayoutComponent } from './components/clerk/shared/clerk-layout.component';
 import { ReservationAutomaticCanelComponent } from './components/clerk/reservation-automatic-canel/reservation-automatic-canel.component';
+import { NoShowBillsComponent } from './components/clerk/no-show-bills/no-show-bills.component';
+import { AllBillsComponent } from './components/clerk/all-bills/all-bills.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent },
@@ -72,6 +74,8 @@ export const routes: Routes = [
     children: [
       { path: 'profile', component: ClerkProfileComponent },
       { path: 'manage-room-states', component: RoomStatusComponent },
+      { path: 'noshow-bills', component: NoShowBillsComponent },
+      { path: 'all-bills', component: AllBillsComponent },
       {
         path: 'cancel-reservation',
         component: ReservationAutomaticCanelComponent,

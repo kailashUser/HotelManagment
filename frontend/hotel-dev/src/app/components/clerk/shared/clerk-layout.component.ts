@@ -61,6 +61,22 @@ import { RouterModule, RouterOutlet } from '@angular/router';
               >7:00 PM Canceld</a
             >
           </li>
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link"
+              routerLink="/clerk/noshow-bills"
+              routerLinkActive="active"
+              >No Show Reports</a
+            >
+          </li>
+          <li class="nav-item mb-2">
+            <a
+              class="nav-link"
+              routerLink="/clerk/all-bills"
+              routerLinkActive="active"
+              >All reports</a
+            >
+          </li>
         </ul>
       </nav>
       <!-- Main Content -->

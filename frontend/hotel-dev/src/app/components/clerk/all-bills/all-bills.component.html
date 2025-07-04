@@ -1,0 +1,287 @@
+<div class="container mt-4">
+  <h2 class="mb-4">All Billing Reports</h2>
+
+  <div *ngIf="billingReports.length === 0" class="alert alert-info">
+    No billing records found.
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Customer</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Room</th>
+          <th>Check-in</th>
+          <th>Check-out</th>
+          <th>Status</th>
+          <th>Amount Due</th>
+          <th>Paid</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let report of billingReports">
+          <td>{{ report.customerName }}</td>
+          <td>{{ report.email }}</td>
+          <td>{{ report.phoneNumber }}</td>
+          <td>{{ report.roomNumber }}</td>
+          <td>{{ report.checkInDate | date }}</td>
+          <td>{{ report.checkOutDate | date }}</td>
+          <td>{{ reservationStatusMap[report.reservationStatus] }}</td>
+          <td>Rs. {{ report.amountDue }}</td>
+          <td>Rs. {{ report.amountPaid ?? 0 }}</td>
+          <td>
+            <button
+              class="btn btn-sm btn-outline-primary"
+              (click)="openReport(report)"
+            >
+              View Full Report
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal Backdrop -->
+  <div
+    class="modal-backdrop fade show"
+    *ngIf="selectedReport"
+    style="z-index: 1040"
+  ></div>
+
+  <!-- Modal -->
+  <div
+    class="modal fade show"
+    tabindex="-1"
+    role="dialog"
+    [ngStyle]="{ display: selectedReport ? 'block' : 'none', zIndex: 1050 }"
+    *ngIf="selectedReport"
+    aria-modal="true"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content" id="print-section">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            Billing Report - {{ selectedReport.customerName }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            (click)="closeReport()"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- Customer Information Section -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <h6 class="text-primary border-bottom pb-2">
+                Customer Information
+              </h6>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>Email:</strong> {{ selectedReport.email }}</p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <strong>Phone:</strong> {{ selectedReport.phoneNumber }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reservation Details Section -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <h6 class="text-primary border-bottom pb-2">
+                Reservation Details
+              </h6>
+              <div class="row">
+                <div class="col-md-6">
+                  <p>
+                    <strong>Room Number:</strong>
+                    {{ selectedReport.roomNumber }}
+                  </p>
+                  <p>
+                    <strong>Room Type:</strong> {{ selectedReport.roomType }}
+                  </p>
+                  <p>
+                    <strong>Check-in:</strong>
+                    {{ selectedReport.checkInDate | date }}
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <strong>Check-out:</strong>
+                    {{ selectedReport.checkOutDate | date }}
+                  </p>
+                  <p><strong>Nights:</strong> {{ selectedReport.nights }}</p>
+                  <p>
+                    <strong>Reservation Status:</strong>
+                    {{ reservationStatusMap[selectedReport.reservationStatus] }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Billing Information Section -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <h6 class="text-primary border-bottom pb-2">
+                Billing Information
+              </h6>
+              <div class="row">
+                <div class="col-md-6">
+                  <p>
+                    <strong>Room Charges:</strong> Rs.
+                    {{ selectedReport.roomCharges | number : "1.2-2" }}
+                  </p>
+                  <p>
+                    <strong>Tax:</strong> Rs.
+                    {{ selectedReport.tax | number : "1.2-2" }}
+                  </p>
+                  <p>
+                    <strong>Discount:</strong> Rs.
+                    {{ selectedReport.discount | number : "1.2-2" }}
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <strong>Additional Charges:</strong> Rs.
+                    {{ selectedReport.additionalCharges | number : "1.2-2" }}
+                  </p>
+                  <p class="text-success">
+                    <strong>Amount Paid:</strong> Rs.
+                    {{ selectedReport.amountPaid ?? 0 | number : "1.2-2" }}
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="alert alert-info">
+                    <h5 class="mb-2">
+                      <strong>Total Amount Due:</strong> Rs.
+                      {{ selectedReport.amountDue | number : "1.2-2" }}
+                    </h5>
+                    <p
+                      class="mb-0"
+                      *ngIf="
+                        selectedReport.amountDue -
+                          (selectedReport.amountPaid ?? 0) >
+                        0
+                      "
+                    >
+                      <strong>Outstanding Balance:</strong> Rs.
+                      {{
+                        selectedReport.amountDue -
+                          (selectedReport.amountPaid ?? 0) | number : "1.2-2"
+                      }}
+                    </p>
+                    <p
+                      class="mb-0 text-success"
+                      *ngIf="
+                        selectedReport.amountDue -
+                          (selectedReport.amountPaid ?? 0) <=
+                        0
+                      "
+                    >
+                      <strong>Status:</strong> Fully Paid
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Information Section -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <h6 class="text-primary border-bottom pb-2">
+                Payment Information
+              </h6>
+              <div class="row">
+                <div class="col-md-6">
+                  <p>
+                    <strong>Payment Status:</strong>
+                    <span
+                      [class]="
+                        'badge ' +
+                        (selectedReport.paymentStatus === 1
+                          ? 'bg-success'
+                          : selectedReport.paymentStatus === 2
+                          ? 'bg-danger'
+                          : 'bg-warning')
+                      "
+                    >
+                      {{ paymentStatusMap[selectedReport.paymentStatus ?? 0] }}
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Payment Method:</strong>
+                    {{ paymentMethodMap[selectedReport.paymentMethod ?? 0] }}
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <strong>Transaction ID:</strong>
+                    {{ selectedReport.transactionId || "N/A" }}
+                  </p>
+                  <p>
+                    <strong>Processed At:</strong>
+                    {{ selectedReport.processedAt | date : "short" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Generated Info -->
+          <div class="row mt-4">
+            <div class="col-12">
+              <small class="text-muted">
+                <em
+                  >Report generated on {{ currentDatenow | date : "short" }}</em
+                >
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Footer with Updated Buttons -->
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="closeReport()">
+            <i class="fas fa-times me-2"></i>Close
+          </button>
+
+          <button
+            class="btn btn-success me-2"
+            (click)="printAsPdf()"
+            [disabled]="isGeneratingPdf"
+          >
+            <span
+              *ngIf="isGeneratingPdf"
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+            <i *ngIf="!isGeneratingPdf" class="fas fa-download me-2"></i>
+            {{ isGeneratingPdf ? "Generating PDF..." : "Download PDF" }}
+          </button>
+
+          <button
+            class="btn btn-outline-primary"
+            (click)="printUsingBrowserPrint()"
+            title="Alternative print method using browser"
+          >
+            <i class="fas fa-print me-2"></i>Print (Browser)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
