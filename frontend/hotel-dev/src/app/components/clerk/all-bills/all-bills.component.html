@@ -6,7 +6,9 @@
   </div>
 
   <div class="table-responsive">
-    <table class="table table-striped table-hover table-bordered align-middle">
+    <table
+      class="table table-striped table-hover table-bordered align-middle fw-semibold"
+    >
       <thead class="table-dark">
         <tr>
           <th>Customer</th>
@@ -16,8 +18,6 @@
           <th>Check-in</th>
           <th>Check-out</th>
           <th>Status</th>
-          <th>Amount Due</th>
-          <th>Paid</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -30,8 +30,7 @@
           <td>{{ report.checkInDate | date }}</td>
           <td>{{ report.checkOutDate | date }}</td>
           <td>{{ reservationStatusMap[report.reservationStatus] }}</td>
-          <td>Rs. {{ report.amountDue }}</td>
-          <td>Rs. {{ report.amountPaid ?? 0 }}</td>
+
           <td>
             <button
               class="btn btn-sm btn-outline-primary"
