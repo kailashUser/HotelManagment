@@ -1,4 +1,6 @@
-﻿namespace HotelReservation.Interfaces
+﻿using HotelReservation.Models.Entities;
+
+namespace HotelReservation.Interfaces
 {
     public interface IReportRepository
     {
@@ -7,5 +9,7 @@
         Task<Dictionary<string, int>> GetReservationStatusSummaryAsync();
         Task<IEnumerable<(string CustomerName, decimal TotalSpent)>> GetCustomerSpendingSummaryAsync();
         Task<decimal> GetOccupancyRateAsync(DateTime startDate, DateTime endDate);
+
+        Task<IEnumerable<BillingReport>> GetBillingReportAsync();
     }
 }

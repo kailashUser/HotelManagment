@@ -27,14 +27,15 @@ namespace HotelReservation.Controllers
         }
 
        
-        [HttpGet("with-customer/{id}")]
-        public async Task<IActionResult> GetByIdWithCustomer(int id)
+        [HttpGet("with-customer/{customerId}")]
+        public async Task<IActionResult> GetByIdWithCustomer(int customerId)
         {
-            var result = await _repo.GetByIdWithCustomerAsync(id);
+            var result = await _repo.GetByIdWithCustomerAsync(customerId);
             if (result == null)
                 return NotFound(ApiResponse<string>.Fail("Reservation not found"));
 
-            return Ok(ApiResponse<ReservationWithCustomer>.Ok(result));
+            
+            return Ok(ApiResponse<IEnumerable<ReservationWithCustomer>>.Ok(result));
         }
 
 
@@ -81,6 +82,7 @@ namespace HotelReservation.Controllers
 
             return Ok(ApiResponse<string>.Ok("Reservation updated successfully"));
         }
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
@@ -129,6 +131,20 @@ namespace HotelReservation.Controllers
             return Ok(ApiResponse<string>.Ok("Reservation updated successfully"));
         }
 
+        [HttpPut("updateReservation")]
+        public async Task<IActionResult> UpdateReservation([FromBody] Reservation reservation)
+        {
+           
+
+            var updated = await _repo.UpdateReservationByIdAsync(reservation);
+
+            if (!updated)
+                return NotFound(ApiResponse<string>.Fail("Reservation not found"));
+
+            return Ok(ApiResponse<string>.Ok("Reservation updated successfully"));
+        }
+
+
         [HttpPut("ReservationUpdate")]
         public async Task<IActionResult> updateStatusCheckout([FromBody] Reservation reservation)
         {
@@ -142,6 +158,18 @@ namespace HotelReservation.Controllers
 
             return Ok(ApiResponse<string>.Ok("Reservation updated successfully"));
         }
+
+
+        [HttpPatch("autocancel")]
+        public async Task<IActionResult> autocancel()
+        {
+            var success = await _repo.reservationautocancel();
+
+            return success
+                ? Ok(ApiResponse<string>.Ok("Reservation cancelled successfully"))
+                : BadRequest(ApiResponse<string>.Fail("Cancellation failed"));
+        }
+
 
     }
 }

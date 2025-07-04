@@ -42,6 +42,7 @@ namespace HotelReservation.Controllers
             payment.ProcessedAt ??= DateTime.UtcNow;
             var id = await _repo.CreateAsync(payment);
             return Ok(ApiResponse<int>.Ok(id, "Payment created"));
+           
         }
 
         [HttpPut]
@@ -62,5 +63,17 @@ namespace HotelReservation.Controllers
                 return NotFound(ApiResponse<string>.Fail("Payment not found"));
             return Ok(ApiResponse<string>.Ok("Payment deleted"));
         }
+
+
+        [HttpPost("NoShowBilling")]
+        public async Task<IActionResult> DuplicatePayment(int reservationID)
+        {
+            var success = await _repo.NoShowBilling(reservationID);
+
+            return success
+                ? Ok(ApiResponse<string>.Ok("Payment duplicated successfully"))
+                : BadRequest(ApiResponse<string>.Fail("Failed to duplicate payment"));
+        }
+
     }
 }
