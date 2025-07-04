@@ -93,7 +93,7 @@ namespace HotelReservation.Repositories
             return result;
         }
 
-        public async Task<ReservationWithCustomer?> GetByIdWithCustomerAsync(int id)
+        public async Task<IEnumerable<ReservationWithCustomer>> GetByIdWithCustomerAsync(int id)
         {
             var sql = @"
         SELECT 
@@ -106,11 +106,11 @@ namespace HotelReservation.Repositories
         FROM Reservations r
         INNER JOIN Customers c ON r.CustomerId = c.userID
         INNER JOIN Rooms rm ON r.RoomId = rm.Id
-        WHERE r.Id = @Id";
+        WHERE c.Id = @Id";
 
             using var connection = _context.CreateConnection();
-            var result = await connection.QueryFirstOrDefaultAsync<ReservationWithCustomer>(sql, new { Id = id });
-            return result;
+            return  await connection.QueryAsync<ReservationWithCustomer>(sql, new { Id = id });
+           
         }
 
         public async Task<IEnumerable<Reservation>> GetByCustomerIdAsync(int customerId)
@@ -119,6 +119,7 @@ namespace HotelReservation.Repositories
             using var conn = _context.CreateConnection();
             return await conn.QueryAsync<Reservation>(sql, new { CustomerId = customerId });
         }
+
 
         public async Task<bool> updateStatus(Reservation reservation)
         {
@@ -165,6 +166,40 @@ namespace HotelReservation.Repositories
                 reservation.CustomerId
             });
 
+            return rows > 0;
+        }
+
+        public async Task<bool> UpdateReservationByIdAsync(Reservation reservation)
+        {
+            var sql = @"
+                UPDATE Reservations SET 
+                    CustomerId = @CustomerId,
+                    RoomId = @RoomId,
+                    CheckInDate = @CheckInDate,
+                    CheckOutDate = @CheckOutDate,
+                    ActualCheckIn = @ActualCheckIn,
+                    ActualCheckOut = @ActualCheckOut,
+                    Status = @Status,
+                    TotalAmount = @TotalAmount,
+                    DepositAmount = @DepositAmount,
+                    SpecialRequests = @SpecialRequests,
+                    UpdatedAt = @UpdatedAt
+                WHERE Id = @Id";
+
+            using var connection = _context.CreateConnection();
+            var rows = await connection.ExecuteAsync(sql, reservation);
+            return rows > 0;
+
+            
+        }
+
+        public async Task<bool> reservationautocancel()
+        {
+            var sql = @"
+                update Reservations set  Status = 4 where Status = 0";
+
+            using var connection = _context.CreateConnection();
+            var rows = await connection.ExecuteAsync(sql);
             return rows > 0;
         }
     }
