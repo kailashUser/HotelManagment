@@ -57,7 +57,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
               class="nav-link"
               routerLink="/clerk/noshow-bills"
               routerLinkActive="active"
-              >No Show Reports</a
+              >All reports</a
             >
           </li>
           <li class="nav-item mb-2">
@@ -65,7 +65,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
               class="nav-link"
               routerLink="/clerk/all-bills"
               routerLinkActive="active"
-              >All reports</a
+              >No Show Reports</a
             >
           </li>
         </ul>

@@ -90,7 +90,8 @@
             </p>
             <p class="mb-0">
               <i class="bi bi-currency-dollar me-2"></i>
-              Total: ${{ formatPrice(reservation.totalPrice) }}
+              Total: <span class="fw-semibold text-danger">LKR</span>
+              {{ formatPrice(reservation.totalPrice) }}
             </p>
           </div>
 

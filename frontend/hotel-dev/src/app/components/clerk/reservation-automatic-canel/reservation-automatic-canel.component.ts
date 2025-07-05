@@ -13,7 +13,7 @@ export class ReservationAutomaticCanelComponent {
   constructor(
     private reservationService: ReservationService,
     private router: Router,
-    private toastr: ToastrService // Show success/error messages
+    private toastr: ToastrService
   ) {}
 
   onAutoCancel(): void {

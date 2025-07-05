@@ -77,11 +77,8 @@ export class PaynowComponent {
     this.clerkService.postPayment(paymentData).subscribe({
       next: (response) => {
         this.toastr.success('Payment completed successfully');
-
-        // Update reservation status to 3 (completed) after successful payment
         this.completeCheckout();
 
-        // Navigate after a short delay to show success message
         setTimeout(() => {
           this.router.navigate(['/clerk/customer-reservations']);
         }, 2000);
@@ -124,7 +121,6 @@ export class PaynowComponent {
     this.clerkService.updateCheckout(reservationData).subscribe({
       next: (response) => {
         if (response.success) {
-          this.toastr.success('Reservation completed successfully');
           console.log('Reservation status updated successfully:', response);
         } else {
           this.toastr.error(

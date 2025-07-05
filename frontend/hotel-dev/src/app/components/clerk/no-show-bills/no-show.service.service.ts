@@ -30,7 +30,7 @@ export class NoShowServiceService {
       )
       .pipe(
         map((res) =>
-          res.data.filter((report) => report.reservationStatus === 4)
+          res.data.filter((report) => report.reservationStatus === 2)
         )
       );
   }

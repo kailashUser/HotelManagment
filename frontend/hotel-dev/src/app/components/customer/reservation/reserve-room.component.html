@@ -9,8 +9,12 @@
         <div class="card-body" *ngIf="room; else loading">
           <div class="text-center mb-4">
             <!-- <img [src]="room.imageUrl" [alt]="room.name" class="img-fluid rounded" -->
-            <img [src]="'../../../../assets/rooms.jpg'" [alt]="room.name" class="img-fluid rounded"
-              style="max-height: 300px; object-fit: cover;" />
+            <img
+              [src]="'../../../../assets/rooms.jpg'"
+              [alt]="room.name"
+              class="img-fluid rounded"
+              style="max-height: 300px; object-fit: cover"
+            />
           </div>
 
           <h5 class="mb-3">{{ room.name }}</h5>
@@ -20,19 +24,24 @@
               <strong>Type:</strong> {{ room.type }}
             </li>
             <li class="list-group-item">
-              <strong>Price:</strong> ${{ formatPrice(room.price) }}/night
+              <strong>Price: </strong>
+              <span class="text-danger fw-semibold">LKR</span>
+              {{ formatPrice(room.price) }}/night
             </li>
             <li class="list-group-item">
               <strong>Capacity:</strong> {{ room.capacity }} guests
             </li>
             <li class="list-group-item">
               <strong>Status:</strong>
-              <span class="badge" [ngClass]="room.available ? 'bg-success' : 'bg-danger'">
-                {{ room.available ? 'Available' : 'Booked' }}
+              <span
+                class="badge"
+                [ngClass]="room.available ? 'bg-success' : 'bg-danger'"
+              >
+                {{ room.available ? "Available" : "Booked" }}
               </span>
             </li>
             <li class="list-group-item">
-              <strong>Amenities:</strong> {{ room.amenities.join(', ') }}
+              <strong>Amenities:</strong> {{ room.amenities.join(", ") }}
             </li>
             <!-- <li class="list-group-item" *ngIf="room.description">
               <strong>Description:</strong> {{ room.description }}
@@ -41,18 +50,31 @@
 
           <div class="mb-3">
             <label for="checkInDate" class="form-label">Check-In Date</label>
-            <input type="date" id="checkInDate" class="form-control" [(ngModel)]="checkInDate" required />
+            <input
+              type="date"
+              id="checkInDate"
+              class="form-control"
+              [(ngModel)]="checkInDate"
+              required
+            />
           </div>
 
           <div class="mb-3">
             <label for="checkOutDate" class="form-label">Check-Out Date</label>
-            <input type="date" id="checkOutDate" class="form-control" [(ngModel)]="checkOutDate" required />
+            <input
+              type="date"
+              id="checkOutDate"
+              class="form-control"
+              [(ngModel)]="checkOutDate"
+              required
+            />
           </div>
 
-
-
-
-          <button class="btn btn-success mt-3" (click)="confirmReservation()" [disabled]="!room.available">
+          <button
+            class="btn btn-success mt-3"
+            (click)="confirmReservation()"
+            [disabled]="!room.available"
+          >
             Confirm Reservation
           </button>
         </div>
