@@ -195,7 +195,9 @@ export class PaymentComponent implements OnInit {
         next: () => {
           this.processing = false;
           this.paymentSuccessful = true;
-          this.toastr.success('Payment successful and reservation updated!');
+          this.toastr.success(
+            'Reservation successful and reservation updated!'
+          );
           setTimeout(() => {
             this.router.navigate(['/customer/my-reservations']);
           }, 1500);

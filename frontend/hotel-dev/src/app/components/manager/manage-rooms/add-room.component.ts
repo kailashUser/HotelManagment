@@ -10,6 +10,7 @@ import {
 import { Router } from '@angular/router';
 import { CreateRoomDto } from '../../../models/room.model';
 import { RoomService } from '../../../services/room.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-manager-add-room',
@@ -25,14 +26,15 @@ export class AddRoomComponent implements OnInit {
   roomTypes = ['Standard', 'Deluxe', 'Suite', 'Executive', 'Presidential'];
   roomStates = [
     { label: 'Available', value: 'true' },
-    { label: 'Unavailable', value: 'false' }
+    { label: 'Unavailable', value: 'false' },
   ];
 
   constructor(
     private fb: FormBuilder,
     private roomService: RoomService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.addRoomForm = this.fb.group({
@@ -70,7 +72,12 @@ export class AddRoomComponent implements OnInit {
     console.log('Price:', form.Price, 'Type:', typeof form.Price);
     console.log('Capacity:', form.Capacity, 'Type:', typeof form.Capacity);
     console.log('Available:', form.Available, 'Type:', typeof form.Available);
-    console.log('Description:', form.Description, 'Type:', typeof form.Description);
+    console.log(
+      'Description:',
+      form.Description,
+      'Type:',
+      typeof form.Description
+    );
 
     // Simple conversion - no complex validation
     const roomData: CreateRoomDto = {
@@ -85,14 +92,20 @@ export class AddRoomComponent implements OnInit {
     console.log('=== FINAL DATA TO SEND ===');
     console.log('roomData:', roomData);
     console.log('roomData.type is number?', typeof roomData.type === 'number');
-    console.log('roomData.basePrice is number?', typeof roomData.basePrice === 'number');
-    console.log('roomData.isAvailable is boolean?', typeof roomData.isAvailable === 'boolean');
+    console.log(
+      'roomData.basePrice is number?',
+      typeof roomData.basePrice === 'number'
+    );
+    console.log(
+      'roomData.isAvailable is boolean?',
+      typeof roomData.isAvailable === 'boolean'
+    );
 
     this.roomService.createRoom(roomData).subscribe({
       next: (res) => {
         console.log('SUCCESS! Response:', res);
         this.isSubmitting = false;
-        alert('Room created successfully!');
+        this.toastr.success('Room created successfully!');
         this.router.navigate(['/manager/manage-rooms']);
       },
       error: (err) => {

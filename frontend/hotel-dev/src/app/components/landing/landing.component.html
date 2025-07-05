@@ -2,10 +2,20 @@
   <!-- Hero Section -->
   <div class="hero-section position-relative">
     <div class="position-relative">
-      <img src="https://dayuse.twic.pics/hotels/10325/fd377a66d38028e34d5d96651597426a-black-hotels.jpg?twic=v1/cover=3840/quality=75" alt="Luxury Hotel" class="w-100" style="height: 80vh; object-fit: cover;">
-      <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0, 0, 0, 0.5);"></div>
+      <img
+        src="https://dayuse.twic.pics/hotels/10325/fd377a66d38028e34d5d96651597426a-black-hotels.jpg?twic=v1/cover=3840/quality=75"
+        alt="Luxury Hotel"
+        class="w-100"
+        style="height: 80vh; object-fit: cover"
+      />
+      <div
+        class="position-absolute top-0 start-0 w-100 h-100"
+        style="background-color: rgba(0, 0, 0, 0.5)"
+      ></div>
     </div>
-    <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+    <div
+      class="position-absolute top-50 start-50 translate-middle text-center text-white"
+    >
       <h1 class="display-4 fw-bold mb-4">Welcome to Luxury Haven</h1>
       <p class="lead mb-4">Experience unparalleled luxury and comfort</p>
       <button class="btn btn-primary landing-btn btn-lg">Book Now</button>
@@ -20,11 +30,13 @@
         <!-- Room 1 -->
         <div class="col-md-6 col-lg-4" *ngFor="let room of rooms">
           <div class="card h-100 shadow-sm">
-            <img [src]="room.image" class="card-img-top" [alt]="room.name">
+            <img [src]="room.image" class="card-img-top" [alt]="room.name" />
             <div class="card-body">
-              <h5 class="card-title">{{room.name}}</h5>
-              <p class="card-text">{{room.description}}</p>
-              <p class="text-primary fw-bold">${{room.price}}/night</p>
+              <h5 class="card-title">{{ room.name }}</h5>
+              <p class="card-text">{{ room.description }}</p>
+              <p class="text-primary fw-bold">
+                <span class="text-danger">LKR -</span> {{ room.price }} /night
+              </p>
             </div>
           </div>
         </div>
@@ -37,17 +49,39 @@
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-6">
-          <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="About Us" class="img-fluid rounded shadow">
+          <img
+            src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
+            alt="About Us"
+            class="img-fluid rounded shadow"
+          />
         </div>
         <div class="col-lg-6">
           <h2 class="mb-4">About Luxury Haven</h2>
-          <p class="lead">Experience the perfect blend of luxury and comfort.</p>
-          <p>Founded in 2010, Luxury Haven has been providing exceptional hospitality services to guests from around the world. Our commitment to excellence and attention to detail sets us apart.</p>
+          <p class="lead">
+            Experience the perfect blend of luxury and comfort.
+          </p>
+          <p>
+            Founded in 2010, Luxury Haven has been providing exceptional
+            hospitality services to guests from around the world. Our commitment
+            to excellence and attention to detail sets us apart.
+          </p>
           <ul class="list-unstyled">
-            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>24/7 Room Service</li>
-            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>World-class Spa</li>
-            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Fine Dining Restaurant</li>
-            <li><i class="bi bi-check-circle-fill text-primary me-2"></i>Fitness Center</li>
+            <li>
+              <i class="bi bi-check-circle-fill text-primary me-2"></i>24/7 Room
+              Service
+            </li>
+            <li>
+              <i class="bi bi-check-circle-fill text-primary me-2"></i
+              >World-class Spa
+            </li>
+            <li>
+              <i class="bi bi-check-circle-fill text-primary me-2"></i>Fine
+              Dining Restaurant
+            </li>
+            <li>
+              <i class="bi bi-check-circle-fill text-primary me-2"></i>Fitness
+              Center
+            </li>
           </ul>
         </div>
       </div>
@@ -64,16 +98,27 @@
           <div class="card h-100 shadow-sm">
             <div class="card-body">
               <div class="d-flex align-items-center mb-3">
-                <img [src]="review.avatar" alt="Guest" class="rounded-circle me-3" width="50">
+                <img
+                  [src]="review.avatar"
+                  alt="Guest"
+                  class="rounded-circle me-3"
+                  width="50"
+                />
                 <div>
-                  <h5 class="mb-0">{{review.name}}</h5>
+                  <h5 class="mb-0">{{ review.name }}</h5>
                   <div class="text-warning">
-                    <i class="bi bi-star-fill" *ngFor="let star of [].constructor(floor(review.rating))"></i>
-                    <i class="bi bi-star-half-fill" *ngIf="review.rating % 1 !== 0"></i>
+                    <i
+                      class="bi bi-star-fill"
+                      *ngFor="let star of [].constructor(floor(review.rating))"
+                    ></i>
+                    <i
+                      class="bi bi-star-half-fill"
+                      *ngIf="review.rating % 1 !== 0"
+                    ></i>
                   </div>
                 </div>
               </div>
-              <p class="card-text">{{review.comment}}</p>
+              <p class="card-text">{{ review.comment }}</p>
             </div>
           </div>
         </div>
@@ -92,9 +137,9 @@
               <h5 class="card-title">Find Us</h5>
               <p class="card-text">
                 <i class="bi bi-geo-alt-fill text-primary me-2"></i>
-                123 Luxury Avenue, Downtown<br>
-                City, State 12345<br>
-                United States
+                123 Luxury Avenue, Downtown<br />
+                City, State 12345<br />
+                Sri Lanka
               </p>
               <div class="d-flex gap-2">
                 <button class="btn btn-primary">
@@ -111,8 +156,15 @@
           <div class="card shadow-sm">
             <div class="card-body p-0">
               <div class="ratio ratio-16x9">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.30591910525!2d-74.25986432970718!3d40.697149422113014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2s!4v1647043087964!5m2!1sen!2s" 
-                        style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253244.74496599838!2d80.48339953901469!3d7.294545320216134!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae3667c6599d93f%3A0x98c7d12643169077!2sKandy!5e0!3m2!1sen!2slk!4v1720160779985!5m2!1sen!2slk"
+                  width="600"
+                  height="450"
+                  style="border: 0"
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
               </div>
             </div>
           </div>

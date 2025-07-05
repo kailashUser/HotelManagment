@@ -27,7 +27,7 @@
           <td [ngClass]="room.available ? 'text-success' : 'text-danger'">
             {{ room.available ? "Available" : "Occupied" }}
           </td>
-          <td>{{ room.price | currency }}</td>
+          <td>LKR {{ room.price }}</td>
           <td>
             <button
               class="btn btn-sm btn-warning me-2"

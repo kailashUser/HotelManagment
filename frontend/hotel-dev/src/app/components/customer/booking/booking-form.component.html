@@ -173,26 +173,17 @@
                 <div class="card bg-light">
                   <div class="card-body">
                     <h5 class="card-title mb-4">Booking Summary</h5>
-                    <div class="d-flex justify-content-between mb-2">
-                      <span>Room Rate</span>
-                      <span>${{ formatPrice(roomPrice) }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                      <span>Number of Nights</span>
-                      <span>{{ numberOfNights }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                      <span>Subtotal</span>
-                      <span>${{ formatPrice(subtotal) }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                      <span>Tax (10%)</span>
-                      <span>${{ formatPrice(tax) }}</span>
-                    </div>
+                    <p class="fw-semibold text-center text-success">
+                      Book Now Pay Later
+                    </p>
+
                     <hr />
                     <div class="d-flex justify-content-between">
                       <strong>Total</strong>
-                      <strong>${{ formatPrice(total) }}</strong>
+                      <strong>
+                        <span class="text-success fw-semibold">LKR </span>
+                        0</strong
+                      >
                     </div>
                   </div>
                 </div>
